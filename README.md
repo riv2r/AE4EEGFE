@@ -1,4 +1,4 @@
-# AutoEncoder for EEG Feature Extraction
+# Control Technology By Brain-Computer Interface and Vision
 
 ## 1 [脑电波](https://baike.baidu.com/item/%E8%84%91%E7%94%B5%E6%B3%A2/1599805?fr=aladdin)
 

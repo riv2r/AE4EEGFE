@@ -25,6 +25,11 @@ A[诱发]-->B[信号采集]-->C[预处理]-->D[特征提取]-->E[分类]
 
 ## 3 诱发
 
+目前常用的脑机接口范式有：
+1. 稳态视觉诱发电位(Steady-State Visual Evoked Potentials, SSVEP)
+2. 运动想象(Motor Imagery BCI, MI-BCI)
+3. P300
+
 ## 4 信号采集
 
 ## 5 预处理

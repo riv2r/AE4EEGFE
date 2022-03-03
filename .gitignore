@@ -7,5 +7,8 @@ dataset/
 # 忽略结果文件
 rst/
 
-# 忽略程序运行缓存文件
+# 忽略.py程序运行缓存文件
 program/__pycache__/
+
+# 忽略.m程序运行缓存文件
+program/*.asv

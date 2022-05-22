@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import load_model
 import numpy as np
 # get dataset
-Tz,Ty=EDFRead.GetData(109)
+Tz,Ty=EDFRead.GetDataset(1, 12)
 # 向左向右运动想象
 X=np.vstack((Tz.T,Ty.T))
 y=np.vstack((np.ones((np.shape(Tz.T)[0],1)),np.zeros((np.shape(Ty.T)[0],1))))

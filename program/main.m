@@ -1,3 +1,7 @@
+%% Initiate Psychtoolbox
+InitPsychtoolbox;
+
+%% Start
 sca;
 clc;
 clear;

@@ -1,4 +1,6 @@
 %% Initiate Psychtoolbox
+% when open MATLAB R2022a firstly
+% execute the following code: InitPsychtoolbox
 InitPsychtoolbox;
 
 %% Start
@@ -21,18 +23,18 @@ PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
 
 % According to the paper 1 is black, 0 is white
-three=              [0 1 1];
-six=                [0 0 0 1 1 1];
-seven=              [0 0 0 1 1 1 1];
-eight=              [0 0 0 0 1 1 1 1];
-nine=               [0 0 0 0 1 1 1 1 1];
+twelve=         [0 0 1 1 1];
+ten=            [0 0 0 1 1 1];
+eight_fiveseven=[0 0 0 1 1 1 1];
+seven_five=     [0 0 0 0 1 1 1 1];
+six_six=        [0 0 0 0 1 1 1 1 1];
 
 % initiate freq table
-freq{1} = nine;
-freq{2} = eight;
-freq{3} = seven;
-freq{4} = six;
-freq{5} = three;
+freq{1} = six_six;
+freq{2} = seven_five;
+freq{3} = eight_fiveseven;
+freq{4} = ten;
+freq{5} = twelve;
 lenFreq=[length(freq{1}),length(freq{2}),length(freq{3}),length(freq{4}),length(freq{5})];
 
 %% Generate display matrixes for movies
@@ -50,7 +52,9 @@ freqCombine=1-freqCombine;
 try
     screens=Screen('Screens');
     screenNumber = max(screens);
-    [win,winRect]=Screen('OpenWindow',screenNumber,[],[640 300 1280 780]);
+    % test size 1 [640 300 1280 780] 640x480
+    % test size 2 [0 0 1920 1080] 1920x1080
+    [win,winRect]=Screen('OpenWindow',screenNumber,[],[0 0 1920 1080]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -84,10 +88,10 @@ try
         Screen('Flip',win);
         indexflip=indexflip+1;
 
-        %Reset index at the end of freq matrix
+        % Reset index at the end of freq matrix
         if indexflip>lcmFreq
             indexflip=1;
-            %disp('over');
+            % disp('over');
         end
     end
     Priority(0); 

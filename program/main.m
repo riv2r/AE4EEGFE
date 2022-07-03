@@ -1,7 +1,7 @@
 %% Initiate Psychtoolbox
 % when open MATLAB R2022a firstly
 % execute the following code: InitPsychtoolbox
-InitPsychtoolbox;
+% InitPsychtoolbox;
 
 %% Start
 sca;
@@ -54,7 +54,7 @@ try
     screenNumber = max(screens);
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[],[0 0 1920 1080]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -64,6 +64,8 @@ try
     for i=1:32
         texture(i)=Screen('MakeTexture',win,uint8(screenMatrix{i})*255);
     end
+    textureWhite=Screen('MakeTexture',win,uint8(ones(size(screenMatrix{1})))*255);
+    textureBlack=Screen('MakeTexture',win,uint8(zeros(size(screenMatrix{1})))*255);
     % Define refresh rate.
     ifi=Screen('GetFlipInterval',win);
     topPriorityLevel = MaxPriority(win);
@@ -71,28 +73,48 @@ try
 
     %% Start looping movie
     Priority(topPriorityLevel);
-    while ~KbCheck
-        % Drawing
-        % Compute texture value based on display value from freq long matrixes
-        textureValue=freqCombine(:,indexflip).*[1;2;4;8;16];
-        textureValue=textureValue(5)+textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
-        % Draw it on the back buffer
-        Screen('DrawTexture',win,texture(textureValue));
-        % Display current index
-        % Screen('DrawText',win,num2str(indexflip),0,0,255);
-        % Tell PTB no more drawing commands will be issued until the next flip
-        Screen('DrawingFinished',win);
-        % Fliping
-        % Screen('Flip',win,vb1+halfifi);
-        % Flip ASAP
-        Screen('Flip',win);
-        indexflip=indexflip+1;
+    vb1=Screen('Flip',win);
+    waitframes = 1;
 
-        % Reset index at the end of freq matrix
-        if indexflip>lcmFreq
-            indexflip=1;
-            % disp('over');
+    while ~KbCheck
+        % Before collect 0.5s
+        % black
+        Screen('DrawTexture',win,textureBlack);
+        Screen('DrawingFinished',win);
+        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+        WaitSecs(0.5);
+        tic;
+        toc;
+        while toc<4
+            % Drawing
+            % Compute texture value based on display value from freq long matrixes
+            textureValue=freqCombine(:,indexflip).*[1;2;4;8;16];
+            textureValue=textureValue(5)+textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
+            % Draw it on the back buffer
+            Screen('DrawTexture',win,texture(textureValue));
+            % Display current index
+            % Screen('DrawText',win,num2str(indexflip),0,0,255);
+            % Tell PTB no more drawing commands will be issued until the next flip
+            Screen('DrawingFinished',win);
+            % Fliping
+            % Screen('Flip',win,vb1+halfifi);
+            % Flip ASAP
+            vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+            indexflip=indexflip+1;
+    
+            % Reset index at the end of freq matrix
+            if indexflip>lcmFreq
+                indexflip=1;
+                % disp('over');
+            end
+            toc;
         end
+        % After collect 0.5s
+        % white
+        Screen('DrawTexture',win,textureWhite);
+        Screen('DrawingFinished',win);
+        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+        WaitSecs(0.5);
     end
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);

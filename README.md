@@ -34,6 +34,15 @@ A[诱发]-->B[信号采集]-->C[预处理]-->D[特征提取]-->E[分类]
 
 ## 4 信号采集
 
+### 4.1 SSVEP信号采集
+
+设计如下所示闪烁刺激器(flicker stimulator)：
+![flicker stimulator](rst\flicker_stimulator.png)
+五个白色方块分别对应于：前、左、停、右、后
+对应的频率分别为：6.67Hz、7.50Hz、8.57Hz、10.00Hz、12.00Hz
+
+
+
 ## 5 预处理
 
 ## 6 特征提取

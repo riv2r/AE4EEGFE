@@ -60,7 +60,7 @@ try
     targetWidth=100;
     targetHeight=100;
     % draw texture to screen
-    screenMatrix=GetImage(width, height, targetWidth, targetHeight);
+    screenMatrix=GetParadigm(width, height, targetWidth, targetHeight);
     for i=1:32
         texture(i)=Screen('MakeTexture',win,uint8(screenMatrix{i})*255);
     end

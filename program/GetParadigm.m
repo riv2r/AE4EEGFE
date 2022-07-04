@@ -1,4 +1,4 @@
-function [Image]=GetImage(winWidth,winHeight,targetWidth,targetHeight)
+function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
     
     %% Generate Matrix for 5 Targets (Top, Right, Down, Left, Stop)
     for i=1:6
@@ -51,5 +51,5 @@ function [Image]=GetImage(winWidth,winHeight,targetWidth,targetHeight)
             end
         end
     end
-    Image=screenMatrix;
+    Paradigm=screenMatrix;
 end

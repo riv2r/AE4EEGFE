@@ -76,7 +76,14 @@ try
     vb1=Screen('Flip',win);
     waitframes = 1;
 
-    while ~KbCheck
+    % Record Start Time
+    t1=clock;
+    t2=clock;
+
+    % Record Times
+    i=0;
+
+    while ~KbCheck && etime(t2,t1)<125
         % Before collect 0.5s
         % black
         Screen('DrawTexture',win,textureBlack);
@@ -115,6 +122,10 @@ try
         Screen('DrawingFinished',win);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(0.5);
+        % Record End Time
+        t2=clock;
+        % Add Times
+        i=i+1;
     end
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);

@@ -1,4 +1,5 @@
-# GetData
+# GetDataMI
+# Dataset:eeg-motor-movementimagery-dataset-1.0.0
 # num1 实验人员序号
 # num2 实验序号
 

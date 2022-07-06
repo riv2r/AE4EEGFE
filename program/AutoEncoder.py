@@ -1,6 +1,6 @@
 # train autoencoder for classification with no compression in the bottleneck layer
 
-import EDFDataRead
+import GetDataMI
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -16,7 +16,7 @@ from matplotlib import pyplot
 import numpy as np
 
 # get dataset
-Tz,Ty=EDFDataRead.GetDataset(1,12)
+Tz,Ty=GetDataMI.GetDataset(1,12)
 # 向左向右运动想象
 X=np.vstack((Tz.T,Ty.T))
 y=np.vstack((np.ones((np.shape(Tz.T)[0],1)),np.zeros((np.shape(Ty.T)[0],1))))

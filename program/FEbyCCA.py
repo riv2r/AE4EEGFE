@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.cross_decomposition import CCA
 import GetDataSSVEP
 import mne
@@ -26,7 +27,7 @@ class FEbyCCA(object):
         # get reference signals
         referSignals = []
         # number of harmonics
-        Nh=2
+        Nh=4
         fs=self.samplingRate
         Ns=self.numSamplingPoints
         # stimulation frequency
@@ -72,7 +73,7 @@ class FEbyCCA(object):
 
 if __name__=='__main__':
     
-    path = 'dataset/SSVEPEEGData/car1.vhdr'
+    path = 'dataset/SSVEPEEGData/car2.vhdr'
     raw = mne.io.read_raw_brainvision(path)
     # 20th channel
     eog_channel_name='IO'
@@ -81,7 +82,8 @@ if __name__=='__main__':
     # plt.show()
 
     # By observation
-    st_time = 9
+    # 10.5 9 8
+    st_time = 8
     ed_time = st_time+last_time
     # raw.load_data()
     valid_raw = raw.copy().crop(st_time,ed_time)
@@ -89,7 +91,7 @@ if __name__=='__main__':
     dataset=GetDataSSVEP.GetDataset()    
 
     dataset.initialize(valid_raw)
-    # dataset.repairEOGByICA(valid_raw)
+    dataset.repairEOGByICA(valid_raw)
     data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
     
 

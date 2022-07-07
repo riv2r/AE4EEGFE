@@ -1,12 +1,14 @@
 import numpy as np
 from sklearn.cross_decomposition import CCA
+import GetDataSSVEP
+import mne
 
 class FEbyCCA(object):
 
     def __init__(self):
         self.freqs          =   [6.67,7.5,8.57,10.0,12.0]
-        self.samplingRate   =   60
-        self.numTargs       =   5
+        self.samplingRate   =   1000
+        self.numSamplingPoints = 5000
 
     def initialize(self):
         # Set SSVEP flicker frequencies
@@ -16,18 +18,17 @@ class FEbyCCA(object):
         # Set sampling rate of hardware
         self.samplingRate = input('Input Sampling Rate:')
         self.samplingRate = float(self.samplingRate)
-        # Set number of SSVEP targets
-        self.numTargs = input('Input Number of Targets:')
-        self.numTargs = float(self.numTargs)
+        # Set number of sampling points
+        self.numSamplingPoints = input('Input Number of Sampling Points:')
+        self.numSamplingPoints = float(self.numSamplingPoints)
 
-    def getReferSignals(self,numSamplingPoints,targFreq):
+    def getReferSignals(self,targFreq):
         # get reference signals
         referSignals = []
         # number of harmonics
         Nh=2
         fs=self.samplingRate
-        # number of sampling points
-        Ns=numSamplingPoints
+        Ns=self.numSamplingPoints
         # stimulation frequency
         f=targFreq
         t=np.arange(0,Ns/fs,step=1.0/fs)
@@ -54,25 +55,57 @@ class FEbyCCA(object):
         return rst
 
     def process(self,EEGDataset):
-        # get number of sampling points
-        # NEED TO MODIFY
-        numSamplingPoints = np.size(EEGDataset[0])
         freqSet=[]
         for freq in self.freqs:
-            freqTemp=self.getReferSignals(numSamplingPoints,freq)
+            freqTemp=self.getReferSignals(freq)
             freqSet.append(freqTemp)
         freqSet=np.array(freqSet)
         n_components=1
         rst=self.findCorr(n_components,EEGDataset,freqSet)
         rstMax=max(rst,key=float)
         predClass=np.argmax(rst)+1
-        print(predClass)
+        # print(predClass)
+
+        return predClass
 
 
-temp = FEbyCCA()
-# temp.initialize()
-print(temp.freqs)
-print(temp.samplingRate)
-print(temp.numTargs)
-referSignals=temp.getReferSignals(600,6.67)
-print(referSignals)
+
+if __name__=='__main__':
+    
+    path = 'dataset/SSVEPEEGData/car1.vhdr'
+    raw = mne.io.read_raw_brainvision(path)
+    # 20th channel
+    eog_channel_name='IO'
+    last_time = 125
+    # raw.plot()
+    # plt.show()
+
+    # By observation
+    st_time = 9
+    ed_time = st_time+last_time
+    # raw.load_data()
+    valid_raw = raw.copy().crop(st_time,ed_time)
+
+    dataset=GetDataSSVEP.GetDataset()    
+
+    dataset.initialize(valid_raw)
+    # dataset.repairEOGByICA(valid_raw)
+    data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
+    
+
+    #-----FEbyCCA-----#
+    temp = FEbyCCA()
+    # temp.initialize()
+    # print(temp.freqs)
+    # print(temp.samplingRate)
+    # print(temp.numSamplingPoints)
+    temp.samplingRate = dataset.samplingRate
+    temp.numSamplingPoints = numSamplingPoints
+    score = 0
+    for i in range(numGroups):
+        datatemp = data[i]
+        predClass = temp.process(datatemp)
+        if predClass == np.mod(i,5)+1:
+            score = score + 1
+    rate = float(score)/25.0*100.0
+    print('识别率为：',rate,'%')

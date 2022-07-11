@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.cross_decomposition import CCA
 import GetDataSSVEP
 import mne
+import time
 
 class FEbyCCA(object):
 
@@ -73,6 +74,7 @@ class FEbyCCA(object):
 
 if __name__=='__main__':
     
+    start = time.time()
     path = 'dataset/SSVEPEEGData/car2.vhdr'
     raw = mne.io.read_raw_brainvision(path)
     # 20th channel
@@ -91,8 +93,8 @@ if __name__=='__main__':
     dataset=GetDataSSVEP.GetDataset()    
 
     dataset.initialize(valid_raw)
-    dataset.repairEOGByICA(valid_raw)
-    data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
+    # dataset.repairEOGByICA(valid_raw)
+    data,t,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
     
 
     #-----FEbyCCA-----#
@@ -109,5 +111,7 @@ if __name__=='__main__':
         predClass = temp.process(datatemp)
         if predClass == np.mod(i,5)+1:
             score = score + 1
-    rate = float(score)/25.0*100.0
+    rate = float(score)/float(numGroups)*100.0
     print('识别率为：',rate,'%')
+    end = time.time()
+    print('程序执行时间为：',end-start,'s')

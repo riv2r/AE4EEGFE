@@ -87,14 +87,14 @@ if __name__=='__main__':
     # 10.5 9 8
     st_time = 8
     ed_time = st_time+last_time
-    # raw.load_data()
-    valid_raw = raw.copy().crop(st_time,ed_time)
+    raw = raw.copy().crop(st_time,ed_time)
 
     dataset=GetDataSSVEP.GetDataset()    
 
-    dataset.initialize(valid_raw)
-    # dataset.repairEOGByICA(valid_raw)
-    data,t,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
+    dataset.initialize(raw)
+    raw=dataset.preProcessing(raw)
+    # raw=dataset.repairEOGByICA(raw)
+    data,t,numGroups,numChans,numSamplingPoints = dataset.getEpochs(raw)
     
 
     #-----FEbyCCA-----#

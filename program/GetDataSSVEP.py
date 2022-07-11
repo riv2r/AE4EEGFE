@@ -24,13 +24,21 @@ class GetDataset(object):
         # self.raw.plot()
         # plt.show()
 
+    def preProcessing(self,raw):
+        # resampling 1000Hz -> 250Hz
+        raw_downsampled = raw.copy().resample(sfreq=250)
+        # notch filter 50.0Hz
+        raw_notch = raw_downsampled.copy().notch_filter(freqs=50.0)
+        # bandpass filter 2.0Hz - 100.0Hz
+        raw_filt = raw_notch.copy().filter(l_freq=2.0,h_freq=100.0)
+
+        self.initialize(raw_filt)
+        return raw_filt
+
     def repairEOGByICA(self,raw):
-        # remove low_frequency drifts
-        raw.load_data()
-        filt_raw = raw.copy().filter(l_freq=1.0,h_freq=None)
         # apply ICA
         ica = ICA(max_iter='auto', random_state=80) 
-        ica.fit(filt_raw)
+        ica.fit(raw)
         ica
         ica.exclude = []
         # find which ICs match the EOG pattern
@@ -41,17 +49,16 @@ class GetDataset(object):
         # plt.show()
 
         # ica.apply() changes the Raw object in-place, so let's make a copy first:
-        reconst_raw = raw.copy()
-        ica.apply(reconst_raw)
+        raw_reconst = raw.copy()
+        ica.apply(raw_reconst)
         # compare original and reconstructed
         # raw.plot()
         # plt.show()
         # reconst_raw.plot()
         # plt.show()
 
-        self.initialize(reconst_raw)
-
-        del reconst_raw
+        self.initialize(raw_reconst)
+        return raw_reconst
 
     def getEpochs(self,raw):
         epochs = mne.make_fixed_length_epochs(raw,duration=5)
@@ -76,13 +83,16 @@ if __name__=='__main__':
     # plt.show()
 
     # By observation
+    # 10.5 9 8
     st_time = 9
     ed_time = st_time+last_time
-    # raw.load_data()
-    valid_raw = raw.copy().crop(st_time,ed_time)
+    raw = raw.copy().crop(st_time,ed_time)
 
     dataset=GetDataset()    
 
-    dataset.initialize(valid_raw)
-    # dateset.repairEOGByICA(valid_raw)
-    data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(valid_raw)
+    dataset.initialize(raw)
+    raw=dataset.preProcessing(raw)
+    # raw=dataset.repairEOGByICA(raw)
+    data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(raw)
+    raw.plot()
+    plt.show()

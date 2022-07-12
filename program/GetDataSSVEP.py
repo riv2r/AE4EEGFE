@@ -37,7 +37,7 @@ class GetDataset(object):
 
     def repairEOGByICA(self,raw):
         # apply ICA
-        ica = ICA(max_iter='auto', random_state=80) 
+        ica = ICA(n_components=15, max_iter='auto', random_state=80) 
         ica.fit(raw)
         ica
         ica.exclude = []
@@ -92,7 +92,7 @@ if __name__=='__main__':
 
     dataset.initialize(raw)
     raw=dataset.preProcessing(raw)
-    # raw=dataset.repairEOGByICA(raw)
+    raw=dataset.repairEOGByICA(raw)
     data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(raw)
     raw.plot()
     plt.show()

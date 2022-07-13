@@ -92,7 +92,7 @@ if __name__=='__main__':
 
     dataset.initialize(raw)
     raw=dataset.preProcessing(raw)
-    raw=dataset.repairEOGByICA(raw)
+    # raw=dataset.repairEOGByICA(raw)
     data,time,numGroups,numChans,numSamplingPoints = dataset.getEpochs(raw)
     raw.plot()
     plt.show()

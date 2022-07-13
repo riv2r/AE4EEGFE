@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cross_decomposition import CCA
 import GetDataSSVEP
 import mne
@@ -75,36 +74,31 @@ class FEbyCCA(object):
 if __name__=='__main__':
     
     start = time.time()
-    path = 'dataset/SSVEPEEGData/car2.vhdr'
+    path = 'dataset/SSVEPEEGData/car.vhdr'
     raw = mne.io.read_raw_brainvision(path)
-    # 20th channel
-    eog_channel_name='IO'
-    last_time = 125
-    # raw.plot()
-    # plt.show()
 
     # By observation
     # 10.5 9 8
-    st_time = 8
+    last_time = 125
+    st_time = 10.5
     ed_time = st_time+last_time
-    raw = raw.copy().crop(st_time,ed_time)
+    raw = raw.crop(st_time,ed_time)
 
     dataset=GetDataSSVEP.GetDataset()    
 
-    dataset.initialize(raw)
     raw=dataset.preProcessing(raw)
-    # raw=dataset.repairEOGByICA(raw)
-    data,t,numGroups,numChans,numSamplingPoints = dataset.getEpochs(raw)
+    raw=dataset.repairEOGByICA(raw)
+    data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
     
 
     #-----FEbyCCA-----#
     temp = FEbyCCA()
     # temp.initialize()
+    temp.samplingRate = samplingRate
+    temp.numSamplingPoints = numSamplingPoints
     # print(temp.freqs)
     # print(temp.samplingRate)
     # print(temp.numSamplingPoints)
-    temp.samplingRate = dataset.samplingRate
-    temp.numSamplingPoints = numSamplingPoints
     score = 0
     for i in range(numGroups):
         datatemp = data[i]

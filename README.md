@@ -33,7 +33,7 @@ A[诱发]-->B[信号采集]-->C[预处理]-->D[特征提取]-->E[分类]
 采用SSVEP的视觉刺激器设计：当眼睛注视到$4\sim60Hz$的视觉刺激时，在大脑的枕叶区会产生与所注视的刺激**相同频率或倍频的EEG**
 
 设计如下所示闪烁刺激器(flicker stimulator)：
-![flicker stimulator](rst\flicker_stimulator.png)
+![flicker stimulator](https://github.com/riv2r/ControlByBCI/blob/master/rst/flicker_stimulator.png)
 五个白色方块分别对应于：前、左、停、右、后
 对应的频率分别为：6.67Hz、7.50Hz、8.57Hz、10.00Hz、12.00Hz
 

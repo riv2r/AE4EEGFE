@@ -30,7 +30,7 @@ A[诱发]-->B[信号采集]-->C[预处理]-->D[特征提取]-->E[分类]
 2. 运动想象(Motor Imagery BCI, MI-BCI)
 3. P300
 
-采用SSVEP的视觉刺激器设计：当眼睛注视到$4\sim60Hz$的视觉刺激时，在大脑的枕叶区会产生与所注视的刺激**相同频率或倍频的EEG**
+采用SSVEP的视觉刺激器设计：当眼睛注视到$4\sim60Hz$的视觉刺激时，在大脑的枕叶区会产生与所注视的刺激**相同频率或倍频的EEG**，对应的通道为POz、Oz、PO3、PO4、O1、O2
 
 设计如下所示闪烁刺激器(flicker stimulator)：
 ![flicker stimulator](https://github.com/riv2r/ControlByBCI/blob/master/rst/flicker_stimulator.png)

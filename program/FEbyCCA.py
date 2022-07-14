@@ -77,8 +77,11 @@ if __name__=='__main__':
     path = 'dataset/SSVEPEEGData/car2.vhdr'
     raw = mne.io.read_raw_brainvision(path)
 
+    picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
+    raw.pick_channels(picks)
+
     # By observation
-    # 11 9.5 9
+    # 12 9.5 9
     last_time = 125
     st_time = 9
     ed_time = st_time+last_time

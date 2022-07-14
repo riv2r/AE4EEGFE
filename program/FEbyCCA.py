@@ -74,13 +74,13 @@ class FEbyCCA(object):
 if __name__=='__main__':
     
     start = time.time()
-    path = 'dataset/SSVEPEEGData/car.vhdr'
+    path = 'dataset/SSVEPEEGData/car2.vhdr'
     raw = mne.io.read_raw_brainvision(path)
 
     # By observation
-    # 10.5 9 8
+    # 11 9.5 9
     last_time = 125
-    st_time = 10.5
+    st_time = 9
     ed_time = st_time+last_time
     raw = raw.crop(st_time,ed_time)
 

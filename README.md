@@ -109,19 +109,28 @@ EEG中的非平稳波形变为了平稳波形
 ### 6.2 典型相关分析(CCA)
 
 采用典型相关分析(CCA)，三次基于SSVEP的实验数据特征提取和分类结果如下：
+
 第一次实验：
+
 相关系数和识别结果
 ![1_rst_corr](https://github.com/riv2r/ControlByBCI/blob/master/rst/1_rst_corr.png)
+
 准确率和识别时间
 ![1_acc_time](https://github.com/riv2r/ControlByBCI/blob/master/rst/1_acc_time.png)
+
 第二次实验：
+
 相关系数和识别结果
 ![2_rst_corr](https://github.com/riv2r/ControlByBCI/blob/master/rst/2_rst_corr.png)
+
 准确率和识别时间
 ![2_acc_time](https://github.com/riv2r/ControlByBCI/blob/master/rst/2_acc_time.png)
+
 第三次实验：
+
 相关系数和识别结果
 ![3_rst_corr](https://github.com/riv2r/ControlByBCI/blob/master/rst/3_rst_corr.png)
+
 准确率和识别时间
 ![3_acc_time](https://github.com/riv2r/ControlByBCI/blob/master/rst/3_acc_time.png)
 

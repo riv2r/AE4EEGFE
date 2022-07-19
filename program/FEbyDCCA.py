@@ -48,13 +48,13 @@ if __name__ == '__main__':
     
     ##########
     # DCCA
-    model = DeepCCA(layer1_size,layer2_size,output_size,use_all_singular_values,device)
+    model = DeepCCA(layer1_size,layer2_size,output_size,use_all_singular_values,device=device).double()
     
     linear_cca = None
     if apply_linear_cca:
         linear_cca = LinearCCA()
     
-    solver = TrainDCCA(model,linear_cca,output_size,learning_rate,epoch_num,batch_size,reg_para,device)
+    solver = TrainDCCA(model,linear_cca,output_size,learning_rate,epoch_num,batch_size,reg_para,device=device)
 
     solver.fit(X_train,Y_train,X_val,Y_val,X_test,Y_test)
     ##########

@@ -96,7 +96,7 @@ class DCCALoss():
 
 class DeepCCA(nn.Module):
 
-    def __init__(self,layer1_size,layer2_size,output_size,use_all_singular_values,device):
+    def __init__(self,layer1_size,layer2_size,output_size,use_all_singular_values,device=torch.device('cpu')):
         super().__init__()
         self.model1 = MlpNet(layer1_size).double()
         self.model2 = MlpNet(layer2_size).double()

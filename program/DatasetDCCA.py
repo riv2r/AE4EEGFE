@@ -47,8 +47,8 @@ class GetDataset():
         val_size = int(size2*0.2)
         test_size = size2-train_size-val_size
         train_dataset,val_dataset,test_dataset = random_split(data.T,[train_size,val_size,test_size])
-        train_dataset = torch.from_numpy(train_dataset.dataset)
-        val_dataset = torch.from_numpy(val_dataset.dataset)
-        test_dataset = torch.from_numpy(test_dataset.dataset)
+        train_dataset = torch.tensor(train_dataset.dataset)
+        val_dataset = torch.tensor(val_dataset.dataset)
+        test_dataset = torch.tensor(test_dataset.dataset)
 
         return train_dataset,val_dataset,test_dataset

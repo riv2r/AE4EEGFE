@@ -1,0 +1,813 @@
+[ INFO : 2022-07-19 20:27:56,586 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:27:56,587 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:27:58,167 ] - Epoch 1: val_loss improved from 0.0000 to -0.1517, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:27:58,172 ] - Epoch 1/100 - time: 1.58 - training_loss: -0.6224 - val_loss: -0.1517
+[ INFO : 2022-07-19 20:27:59,656 ] - Epoch 2: val_loss improved from -0.1517 to -0.6903, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:27:59,660 ] - Epoch 2/100 - time: 1.49 - training_loss: -0.6489 - val_loss: -0.6903
+[ INFO : 2022-07-19 20:28:01,003 ] - Epoch 3: val_loss improved from -0.6903 to -0.8108, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:01,007 ] - Epoch 3/100 - time: 1.35 - training_loss: -0.6435 - val_loss: -0.8108
+[ INFO : 2022-07-19 20:28:02,441 ] - Epoch 4: val_loss did not improve from -0.8108
+[ INFO : 2022-07-19 20:28:02,441 ] - Epoch 4/100 - time: 1.43 - training_loss: -0.6369 - val_loss: -0.7491
+[ INFO : 2022-07-19 20:28:04,014 ] - Epoch 5: val_loss improved from -0.8108 to -0.8446, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:04,018 ] - Epoch 5/100 - time: 1.58 - training_loss: -0.6347 - val_loss: -0.8446
+[ INFO : 2022-07-19 20:28:05,346 ] - Epoch 6: val_loss did not improve from -0.8446
+[ INFO : 2022-07-19 20:28:05,346 ] - Epoch 6/100 - time: 1.33 - training_loss: -0.6357 - val_loss: -0.8418
+[ INFO : 2022-07-19 20:28:06,794 ] - Epoch 7: val_loss did not improve from -0.8446
+[ INFO : 2022-07-19 20:28:06,794 ] - Epoch 7/100 - time: 1.45 - training_loss: -0.6371 - val_loss: -0.8383
+[ INFO : 2022-07-19 20:28:08,114 ] - Epoch 8: val_loss did not improve from -0.8446
+[ INFO : 2022-07-19 20:28:08,114 ] - Epoch 8/100 - time: 1.32 - training_loss: -0.6395 - val_loss: -0.8378
+[ INFO : 2022-07-19 20:28:09,415 ] - Epoch 9: val_loss did not improve from -0.8446
+[ INFO : 2022-07-19 20:28:09,415 ] - Epoch 9/100 - time: 1.30 - training_loss: -0.6381 - val_loss: -0.8265
+[ INFO : 2022-07-19 20:28:10,743 ] - Epoch 10: val_loss improved from -0.8446 to -0.8576, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:10,747 ] - Epoch 10/100 - time: 1.33 - training_loss: -0.6395 - val_loss: -0.8576
+[ INFO : 2022-07-19 20:28:12,113 ] - Epoch 11: val_loss did not improve from -0.8576
+[ INFO : 2022-07-19 20:28:12,113 ] - Epoch 11/100 - time: 1.37 - training_loss: -0.6374 - val_loss: -0.7977
+[ INFO : 2022-07-19 20:28:13,418 ] - Epoch 12: val_loss did not improve from -0.8576
+[ INFO : 2022-07-19 20:28:13,418 ] - Epoch 12/100 - time: 1.30 - training_loss: -0.6383 - val_loss: -0.8483
+[ INFO : 2022-07-19 20:28:14,719 ] - Epoch 13: val_loss did not improve from -0.8576
+[ INFO : 2022-07-19 20:28:14,719 ] - Epoch 13/100 - time: 1.30 - training_loss: -0.6389 - val_loss: -0.8414
+[ INFO : 2022-07-19 20:28:16,027 ] - Epoch 14: val_loss improved from -0.8576 to -0.8808, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:16,031 ] - Epoch 14/100 - time: 1.31 - training_loss: -0.6376 - val_loss: -0.8808
+[ INFO : 2022-07-19 20:28:17,429 ] - Epoch 15: val_loss did not improve from -0.8808
+[ INFO : 2022-07-19 20:28:17,430 ] - Epoch 15/100 - time: 1.40 - training_loss: -0.6375 - val_loss: -0.8777
+[ INFO : 2022-07-19 20:28:18,761 ] - Epoch 16: val_loss improved from -0.8808 to -0.8939, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:18,765 ] - Epoch 16/100 - time: 1.34 - training_loss: -0.6384 - val_loss: -0.8939
+[ INFO : 2022-07-19 20:28:20,186 ] - Epoch 17: val_loss did not improve from -0.8939
+[ INFO : 2022-07-19 20:28:20,186 ] - Epoch 17/100 - time: 1.42 - training_loss: -0.6409 - val_loss: -0.8822
+[ INFO : 2022-07-19 20:28:21,579 ] - Epoch 18: val_loss improved from -0.8939 to -0.9411, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:21,583 ] - Epoch 18/100 - time: 1.40 - training_loss: -0.6427 - val_loss: -0.9411
+[ INFO : 2022-07-19 20:28:23,021 ] - Epoch 19: val_loss did not improve from -0.9411
+[ INFO : 2022-07-19 20:28:23,022 ] - Epoch 19/100 - time: 1.44 - training_loss: -0.6427 - val_loss: -0.9014
+[ INFO : 2022-07-19 20:28:24,471 ] - Epoch 20: val_loss did not improve from -0.9411
+[ INFO : 2022-07-19 20:28:24,471 ] - Epoch 20/100 - time: 1.45 - training_loss: -0.6416 - val_loss: -0.9056
+[ INFO : 2022-07-19 20:28:25,903 ] - Epoch 21: val_loss did not improve from -0.9411
+[ INFO : 2022-07-19 20:28:25,903 ] - Epoch 21/100 - time: 1.43 - training_loss: -0.6440 - val_loss: -0.9146
+[ INFO : 2022-07-19 20:28:27,405 ] - Epoch 22: val_loss did not improve from -0.9411
+[ INFO : 2022-07-19 20:28:27,406 ] - Epoch 22/100 - time: 1.50 - training_loss: -0.6431 - val_loss: -0.8790
+[ INFO : 2022-07-19 20:28:28,745 ] - Epoch 23: val_loss did not improve from -0.9411
+[ INFO : 2022-07-19 20:28:28,745 ] - Epoch 23/100 - time: 1.34 - training_loss: -0.6427 - val_loss: -0.9175
+[ INFO : 2022-07-19 20:28:30,161 ] - Epoch 24: val_loss improved from -0.9411 to -0.9504, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:30,165 ] - Epoch 24/100 - time: 1.42 - training_loss: -0.6431 - val_loss: -0.9504
+[ INFO : 2022-07-19 20:28:31,659 ] - Epoch 25: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:31,659 ] - Epoch 25/100 - time: 1.49 - training_loss: -0.6430 - val_loss: -0.9108
+[ INFO : 2022-07-19 20:28:33,214 ] - Epoch 26: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:33,214 ] - Epoch 26/100 - time: 1.56 - training_loss: -0.6436 - val_loss: -0.9131
+[ INFO : 2022-07-19 20:28:34,656 ] - Epoch 27: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:34,656 ] - Epoch 27/100 - time: 1.44 - training_loss: -0.6444 - val_loss: -0.8787
+[ INFO : 2022-07-19 20:28:36,169 ] - Epoch 28: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:36,170 ] - Epoch 28/100 - time: 1.51 - training_loss: -0.6451 - val_loss: -0.8859
+[ INFO : 2022-07-19 20:28:37,884 ] - Epoch 29: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:37,885 ] - Epoch 29/100 - time: 1.71 - training_loss: -0.6449 - val_loss: -0.8886
+[ INFO : 2022-07-19 20:28:39,403 ] - Epoch 30: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:39,403 ] - Epoch 30/100 - time: 1.52 - training_loss: -0.6434 - val_loss: -0.9071
+[ INFO : 2022-07-19 20:28:40,832 ] - Epoch 31: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:40,832 ] - Epoch 31/100 - time: 1.43 - training_loss: -0.6432 - val_loss: -0.9033
+[ INFO : 2022-07-19 20:28:42,504 ] - Epoch 32: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:42,504 ] - Epoch 32/100 - time: 1.67 - training_loss: -0.6438 - val_loss: -0.9158
+[ INFO : 2022-07-19 20:28:44,065 ] - Epoch 33: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:44,066 ] - Epoch 33/100 - time: 1.56 - training_loss: -0.6426 - val_loss: -0.9334
+[ INFO : 2022-07-19 20:28:45,620 ] - Epoch 34: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:45,621 ] - Epoch 34/100 - time: 1.55 - training_loss: -0.6421 - val_loss: -0.9494
+[ INFO : 2022-07-19 20:28:47,206 ] - Epoch 35: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:47,206 ] - Epoch 35/100 - time: 1.59 - training_loss: -0.6434 - val_loss: -0.9478
+[ INFO : 2022-07-19 20:28:48,807 ] - Epoch 36: val_loss did not improve from -0.9504
+[ INFO : 2022-07-19 20:28:48,808 ] - Epoch 36/100 - time: 1.60 - training_loss: -0.6441 - val_loss: -0.9484
+[ INFO : 2022-07-19 20:28:50,476 ] - Epoch 37: val_loss improved from -0.9504 to -0.9658, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:50,482 ] - Epoch 37/100 - time: 1.67 - training_loss: -0.6435 - val_loss: -0.9658
+[ INFO : 2022-07-19 20:28:52,249 ] - Epoch 38: val_loss did not improve from -0.9658
+[ INFO : 2022-07-19 20:28:52,249 ] - Epoch 38/100 - time: 1.77 - training_loss: -0.6431 - val_loss: -0.9416
+[ INFO : 2022-07-19 20:28:55,398 ] - Epoch 39: val_loss improved from -0.9658 to -0.9679, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:28:55,403 ] - Epoch 39/100 - time: 3.15 - training_loss: -0.6429 - val_loss: -0.9679
+[ INFO : 2022-07-19 20:28:57,187 ] - Epoch 40: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:28:57,187 ] - Epoch 40/100 - time: 1.78 - training_loss: -0.6426 - val_loss: -0.9098
+[ INFO : 2022-07-19 20:28:58,911 ] - Epoch 41: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:28:58,912 ] - Epoch 41/100 - time: 1.72 - training_loss: -0.6416 - val_loss: -0.9202
+[ INFO : 2022-07-19 20:29:00,624 ] - Epoch 42: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:00,624 ] - Epoch 42/100 - time: 1.71 - training_loss: -0.6418 - val_loss: -0.7720
+[ INFO : 2022-07-19 20:29:02,450 ] - Epoch 43: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:02,450 ] - Epoch 43/100 - time: 1.83 - training_loss: -0.6424 - val_loss: -0.9202
+[ INFO : 2022-07-19 20:29:04,105 ] - Epoch 44: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:04,105 ] - Epoch 44/100 - time: 1.65 - training_loss: -0.6428 - val_loss: -0.9513
+[ INFO : 2022-07-19 20:29:05,798 ] - Epoch 45: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:05,798 ] - Epoch 45/100 - time: 1.69 - training_loss: -0.6434 - val_loss: -0.9573
+[ INFO : 2022-07-19 20:29:07,485 ] - Epoch 46: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:07,485 ] - Epoch 46/100 - time: 1.69 - training_loss: -0.6435 - val_loss: -0.9538
+[ INFO : 2022-07-19 20:29:09,215 ] - Epoch 47: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:09,215 ] - Epoch 47/100 - time: 1.73 - training_loss: -0.6437 - val_loss: -0.9617
+[ INFO : 2022-07-19 20:29:10,964 ] - Epoch 48: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:10,964 ] - Epoch 48/100 - time: 1.75 - training_loss: -0.6435 - val_loss: -0.7827
+[ INFO : 2022-07-19 20:29:12,703 ] - Epoch 49: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:12,703 ] - Epoch 49/100 - time: 1.74 - training_loss: -0.6440 - val_loss: -0.9633
+[ INFO : 2022-07-19 20:29:14,463 ] - Epoch 50: val_loss did not improve from -0.9679
+[ INFO : 2022-07-19 20:29:14,463 ] - Epoch 50/100 - time: 1.76 - training_loss: -0.6441 - val_loss: -0.8781
+[ INFO : 2022-07-19 20:29:16,121 ] - Epoch 51: val_loss improved from -0.9679 to -0.9877, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:29:16,125 ] - Epoch 51/100 - time: 1.66 - training_loss: -0.6443 - val_loss: -0.9877
+[ INFO : 2022-07-19 20:29:17,953 ] - Epoch 52: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:17,953 ] - Epoch 52/100 - time: 1.83 - training_loss: -0.6442 - val_loss: -0.9742
+[ INFO : 2022-07-19 20:29:20,355 ] - Epoch 53: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:20,355 ] - Epoch 53/100 - time: 2.40 - training_loss: -0.6444 - val_loss: -0.9582
+[ INFO : 2022-07-19 20:29:22,406 ] - Epoch 54: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:22,406 ] - Epoch 54/100 - time: 2.05 - training_loss: -0.6446 - val_loss: -0.9638
+[ INFO : 2022-07-19 20:29:24,388 ] - Epoch 55: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:24,389 ] - Epoch 55/100 - time: 1.98 - training_loss: -0.6439 - val_loss: -0.9775
+[ INFO : 2022-07-19 20:29:26,299 ] - Epoch 56: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:26,299 ] - Epoch 56/100 - time: 1.91 - training_loss: -0.6444 - val_loss: -0.9485
+[ INFO : 2022-07-19 20:29:28,095 ] - Epoch 57: val_loss did not improve from -0.9877
+[ INFO : 2022-07-19 20:29:28,095 ] - Epoch 57/100 - time: 1.80 - training_loss: -0.6440 - val_loss: -0.9786
+[ INFO : 2022-07-19 20:29:29,986 ] - Epoch 58: val_loss improved from -0.9877 to -0.9894, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:29:29,990 ] - Epoch 58/100 - time: 1.89 - training_loss: -0.6439 - val_loss: -0.9894
+[ INFO : 2022-07-19 20:29:31,747 ] - Epoch 59: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:31,747 ] - Epoch 59/100 - time: 1.76 - training_loss: -0.6448 - val_loss: -0.9844
+[ INFO : 2022-07-19 20:29:33,609 ] - Epoch 60: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:33,609 ] - Epoch 60/100 - time: 1.86 - training_loss: -0.6457 - val_loss: -0.9739
+[ INFO : 2022-07-19 20:29:35,343 ] - Epoch 61: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:35,344 ] - Epoch 61/100 - time: 1.73 - training_loss: -0.6467 - val_loss: -0.9534
+[ INFO : 2022-07-19 20:29:37,310 ] - Epoch 62: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:37,310 ] - Epoch 62/100 - time: 1.97 - training_loss: -0.6471 - val_loss: -0.9850
+[ INFO : 2022-07-19 20:29:39,695 ] - Epoch 63: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:39,695 ] - Epoch 63/100 - time: 2.38 - training_loss: -0.6474 - val_loss: -0.9593
+[ INFO : 2022-07-19 20:29:42,113 ] - Epoch 64: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:42,113 ] - Epoch 64/100 - time: 2.42 - training_loss: -0.6475 - val_loss: -0.7248
+[ INFO : 2022-07-19 20:29:44,278 ] - Epoch 65: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:44,278 ] - Epoch 65/100 - time: 2.16 - training_loss: -0.6476 - val_loss: -0.7130
+[ INFO : 2022-07-19 20:29:46,268 ] - Epoch 66: val_loss did not improve from -0.9894
+[ INFO : 2022-07-19 20:29:46,269 ] - Epoch 66/100 - time: 1.99 - training_loss: -0.6482 - val_loss: -0.3704
+[ INFO : 2022-07-19 20:29:48,567 ] - Epoch 67: val_loss improved from -0.9894 to -0.9962, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:29:48,572 ] - Epoch 67/100 - time: 2.30 - training_loss: -0.6487 - val_loss: -0.9962
+[ INFO : 2022-07-19 20:29:50,673 ] - Epoch 68: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:29:50,673 ] - Epoch 68/100 - time: 2.10 - training_loss: -0.6483 - val_loss: -0.9345
+[ INFO : 2022-07-19 20:29:52,705 ] - Epoch 69: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:29:52,705 ] - Epoch 69/100 - time: 2.03 - training_loss: -0.6486 - val_loss: -0.9454
+[ INFO : 2022-07-19 20:29:54,830 ] - Epoch 70: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:29:54,831 ] - Epoch 70/100 - time: 2.13 - training_loss: -0.6488 - val_loss: -0.9294
+[ INFO : 2022-07-19 20:29:56,852 ] - Epoch 71: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:29:56,853 ] - Epoch 71/100 - time: 2.02 - training_loss: -0.6490 - val_loss: -0.6415
+[ INFO : 2022-07-19 20:29:58,956 ] - Epoch 72: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:29:58,957 ] - Epoch 72/100 - time: 2.10 - training_loss: -0.6491 - val_loss: -0.9297
+[ INFO : 2022-07-19 20:30:01,007 ] - Epoch 73: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:01,007 ] - Epoch 73/100 - time: 2.05 - training_loss: -0.6489 - val_loss: -0.9396
+[ INFO : 2022-07-19 20:30:03,423 ] - Epoch 74: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:03,423 ] - Epoch 74/100 - time: 2.42 - training_loss: -0.6484 - val_loss: -0.9299
+[ INFO : 2022-07-19 20:30:05,686 ] - Epoch 75: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:05,686 ] - Epoch 75/100 - time: 2.26 - training_loss: -0.6479 - val_loss: -0.9172
+[ INFO : 2022-07-19 20:30:08,211 ] - Epoch 76: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:08,211 ] - Epoch 76/100 - time: 2.52 - training_loss: -0.6479 - val_loss: -0.9414
+[ INFO : 2022-07-19 20:30:10,424 ] - Epoch 77: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:10,424 ] - Epoch 77/100 - time: 2.21 - training_loss: -0.6480 - val_loss: -0.9411
+[ INFO : 2022-07-19 20:30:14,193 ] - Epoch 78: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:14,194 ] - Epoch 78/100 - time: 3.77 - training_loss: -0.6481 - val_loss: -0.9652
+[ INFO : 2022-07-19 20:30:16,245 ] - Epoch 79: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:16,245 ] - Epoch 79/100 - time: 2.05 - training_loss: -0.6478 - val_loss: -0.9833
+[ INFO : 2022-07-19 20:30:18,322 ] - Epoch 80: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:18,323 ] - Epoch 80/100 - time: 2.08 - training_loss: -0.6479 - val_loss: -0.8309
+[ INFO : 2022-07-19 20:30:20,319 ] - Epoch 81: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:20,319 ] - Epoch 81/100 - time: 2.00 - training_loss: -0.6480 - val_loss: -0.7197
+[ INFO : 2022-07-19 20:30:22,311 ] - Epoch 82: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:22,311 ] - Epoch 82/100 - time: 1.99 - training_loss: -0.6482 - val_loss: -0.9595
+[ INFO : 2022-07-19 20:30:24,385 ] - Epoch 83: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:24,385 ] - Epoch 83/100 - time: 2.07 - training_loss: -0.6484 - val_loss: -0.9369
+[ INFO : 2022-07-19 20:30:26,378 ] - Epoch 84: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:26,378 ] - Epoch 84/100 - time: 1.99 - training_loss: -0.6484 - val_loss: -0.9358
+[ INFO : 2022-07-19 20:30:28,465 ] - Epoch 85: val_loss did not improve from -0.9962
+[ INFO : 2022-07-19 20:30:28,466 ] - Epoch 85/100 - time: 2.09 - training_loss: -0.6486 - val_loss: -0.6782
+[ INFO : 2022-07-19 20:30:30,467 ] - Epoch 86: val_loss improved from -0.9962 to -1.0170, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:30:30,472 ] - Epoch 86/100 - time: 2.01 - training_loss: -0.6487 - val_loss: -1.0170
+[ INFO : 2022-07-19 20:30:32,488 ] - Epoch 87: val_loss did not improve from -1.0170
+[ INFO : 2022-07-19 20:30:32,488 ] - Epoch 87/100 - time: 2.02 - training_loss: -0.6484 - val_loss: -1.0005
+[ INFO : 2022-07-19 20:30:34,563 ] - Epoch 88: val_loss did not improve from -1.0170
+[ INFO : 2022-07-19 20:30:34,563 ] - Epoch 88/100 - time: 2.07 - training_loss: -0.6490 - val_loss: -0.8833
+[ INFO : 2022-07-19 20:30:36,544 ] - Epoch 89: val_loss did not improve from -1.0170
+[ INFO : 2022-07-19 20:30:36,544 ] - Epoch 89/100 - time: 1.98 - training_loss: -0.6493 - val_loss: -0.8252
+[ INFO : 2022-07-19 20:30:38,621 ] - Epoch 90: val_loss improved from -1.0170 to -1.0432, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:30:38,625 ] - Epoch 90/100 - time: 2.08 - training_loss: -0.6498 - val_loss: -1.0432
+[ INFO : 2022-07-19 20:30:40,675 ] - Epoch 91: val_loss did not improve from -1.0432
+[ INFO : 2022-07-19 20:30:40,675 ] - Epoch 91/100 - time: 2.05 - training_loss: -0.6496 - val_loss: -0.8951
+[ INFO : 2022-07-19 20:30:42,694 ] - Epoch 92: val_loss did not improve from -1.0432
+[ INFO : 2022-07-19 20:30:42,695 ] - Epoch 92/100 - time: 2.02 - training_loss: -0.6500 - val_loss: -0.9397
+[ INFO : 2022-07-19 20:30:44,794 ] - Epoch 93: val_loss improved from -1.0432 to -1.0521, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:30:44,798 ] - Epoch 93/100 - time: 2.10 - training_loss: -0.6499 - val_loss: -1.0521
+[ INFO : 2022-07-19 20:30:46,784 ] - Epoch 94: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:46,784 ] - Epoch 94/100 - time: 1.99 - training_loss: -0.6499 - val_loss: -1.0312
+[ INFO : 2022-07-19 20:30:48,857 ] - Epoch 95: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:48,857 ] - Epoch 95/100 - time: 2.07 - training_loss: -0.6504 - val_loss: -0.7796
+[ INFO : 2022-07-19 20:30:50,850 ] - Epoch 96: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:50,850 ] - Epoch 96/100 - time: 1.99 - training_loss: -0.6507 - val_loss: -0.9229
+[ INFO : 2022-07-19 20:30:52,831 ] - Epoch 97: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:52,831 ] - Epoch 97/100 - time: 1.98 - training_loss: -0.6509 - val_loss: -0.9960
+[ INFO : 2022-07-19 20:30:54,900 ] - Epoch 98: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:54,900 ] - Epoch 98/100 - time: 2.07 - training_loss: -0.6513 - val_loss: -0.9919
+[ INFO : 2022-07-19 20:30:56,891 ] - Epoch 99: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:56,892 ] - Epoch 99/100 - time: 1.99 - training_loss: -0.6511 - val_loss: -1.0048
+[ INFO : 2022-07-19 20:30:58,995 ] - Epoch 100: val_loss did not improve from -1.0521
+[ INFO : 2022-07-19 20:30:58,995 ] - Epoch 100/100 - time: 2.10 - training_loss: -0.6512 - val_loss: -0.8398
+[ INFO : 2022-07-19 20:31:00,063 ] - loss on validation data: -1.0521
+[ INFO : 2022-07-19 20:31:00,614 ] - loss on test data: -1.0521
+[ INFO : 2022-07-19 20:51:23,445 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:51:23,446 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:51:24,818 ] - Epoch 1: val_loss improved from 0.0000 to -0.1934, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:51:24,823 ] - Epoch 1/10 - time: 1.38 - training_loss: -0.6249 - val_loss: -0.1934
+[ INFO : 2022-07-19 20:51:26,210 ] - Epoch 2: val_loss improved from -0.1934 to -0.8792, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:51:26,214 ] - Epoch 2/10 - time: 1.39 - training_loss: -0.6416 - val_loss: -0.8792
+[ INFO : 2022-07-19 20:51:27,555 ] - Epoch 3: val_loss improved from -0.8792 to -0.8856, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:51:27,559 ] - Epoch 3/10 - time: 1.34 - training_loss: -0.6490 - val_loss: -0.8856
+[ INFO : 2022-07-19 20:51:28,893 ] - Epoch 4: val_loss improved from -0.8856 to -0.9192, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:51:28,898 ] - Epoch 4/10 - time: 1.34 - training_loss: -0.6538 - val_loss: -0.9192
+[ INFO : 2022-07-19 20:51:30,274 ] - Epoch 5: val_loss did not improve from -0.9192
+[ INFO : 2022-07-19 20:51:30,275 ] - Epoch 5/10 - time: 1.38 - training_loss: -0.6452 - val_loss: -0.8787
+[ INFO : 2022-07-19 20:51:31,594 ] - Epoch 6: val_loss did not improve from -0.9192
+[ INFO : 2022-07-19 20:51:31,595 ] - Epoch 6/10 - time: 1.32 - training_loss: -0.6471 - val_loss: -0.8899
+[ INFO : 2022-07-19 20:51:32,880 ] - Epoch 7: val_loss did not improve from -0.9192
+[ INFO : 2022-07-19 20:51:32,880 ] - Epoch 7/10 - time: 1.29 - training_loss: -0.6428 - val_loss: -0.8753
+[ INFO : 2022-07-19 20:51:34,223 ] - Epoch 8: val_loss improved from -0.9192 to -0.9683, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:51:34,227 ] - Epoch 8/10 - time: 1.35 - training_loss: -0.6408 - val_loss: -0.9683
+[ INFO : 2022-07-19 20:51:35,587 ] - Epoch 9: val_loss did not improve from -0.9683
+[ INFO : 2022-07-19 20:51:35,587 ] - Epoch 9/10 - time: 1.36 - training_loss: -0.6441 - val_loss: -0.9419
+[ INFO : 2022-07-19 20:51:36,916 ] - Epoch 10: val_loss did not improve from -0.9683
+[ INFO : 2022-07-19 20:51:36,916 ] - Epoch 10/10 - time: 1.33 - training_loss: -0.6461 - val_loss: -0.9305
+[ INFO : 2022-07-19 20:51:37,946 ] - loss on validation data: -0.9683
+[ INFO : 2022-07-19 20:51:38,554 ] - loss on test data: -0.9683
+[ INFO : 2022-07-19 20:52:08,168 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:52:08,169 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:52:09,554 ] - Epoch 1: val_loss improved from 0.0000 to -0.1659, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:52:09,559 ] - Epoch 1/10 - time: 1.39 - training_loss: -0.6500 - val_loss: -0.1659
+[ INFO : 2022-07-19 20:52:10,890 ] - Epoch 2: val_loss improved from -0.1659 to -0.8481, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:52:10,894 ] - Epoch 2/10 - time: 1.33 - training_loss: -0.6507 - val_loss: -0.8481
+[ INFO : 2022-07-19 20:52:12,221 ] - Epoch 3: val_loss did not improve from -0.8481
+[ INFO : 2022-07-19 20:52:12,221 ] - Epoch 3/10 - time: 1.33 - training_loss: -0.6449 - val_loss: -0.5506
+[ INFO : 2022-07-19 20:52:13,560 ] - Epoch 4: val_loss improved from -0.8481 to -0.9199, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:52:13,564 ] - Epoch 4/10 - time: 1.34 - training_loss: -0.6369 - val_loss: -0.9199
+[ INFO : 2022-07-19 20:52:14,948 ] - Epoch 5: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:14,948 ] - Epoch 5/10 - time: 1.38 - training_loss: -0.6515 - val_loss: -0.8814
+[ INFO : 2022-07-19 20:52:16,288 ] - Epoch 6: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:16,288 ] - Epoch 6/10 - time: 1.34 - training_loss: -0.6454 - val_loss: -0.8760
+[ INFO : 2022-07-19 20:52:17,609 ] - Epoch 7: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:17,609 ] - Epoch 7/10 - time: 1.32 - training_loss: -0.6425 - val_loss: -0.8914
+[ INFO : 2022-07-19 20:52:18,936 ] - Epoch 8: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:18,936 ] - Epoch 8/10 - time: 1.33 - training_loss: -0.6456 - val_loss: -0.8204
+[ INFO : 2022-07-19 20:52:20,291 ] - Epoch 9: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:20,291 ] - Epoch 9/10 - time: 1.35 - training_loss: -0.6431 - val_loss: -0.8440
+[ INFO : 2022-07-19 20:52:21,591 ] - Epoch 10: val_loss did not improve from -0.9199
+[ INFO : 2022-07-19 20:52:21,591 ] - Epoch 10/10 - time: 1.30 - training_loss: -0.6435 - val_loss: -0.8719
+[ INFO : 2022-07-19 20:52:22,542 ] - loss on validation data: -0.9199
+[ INFO : 2022-07-19 20:52:23,035 ] - loss on test data: -0.9199
+[ INFO : 2022-07-19 20:53:05,036 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:53:05,037 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:53:06,419 ] - Epoch 1: val_loss improved from 0.0000 to -0.2356, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:53:06,425 ] - Epoch 1/5 - time: 1.39 - training_loss: -0.6127 - val_loss: -0.2356
+[ INFO : 2022-07-19 20:53:07,779 ] - Epoch 2: val_loss improved from -0.2356 to -0.8557, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:53:07,784 ] - Epoch 2/5 - time: 1.36 - training_loss: -0.6256 - val_loss: -0.8557
+[ INFO : 2022-07-19 20:53:09,126 ] - Epoch 3: val_loss improved from -0.8557 to -0.8950, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:53:09,130 ] - Epoch 3/5 - time: 1.35 - training_loss: -0.6369 - val_loss: -0.8950
+[ INFO : 2022-07-19 20:53:10,466 ] - Epoch 4: val_loss improved from -0.8950 to -0.9010, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:53:10,470 ] - Epoch 4/5 - time: 1.34 - training_loss: -0.6445 - val_loss: -0.9010
+[ INFO : 2022-07-19 20:53:11,844 ] - Epoch 5: val_loss did not improve from -0.9010
+[ INFO : 2022-07-19 20:53:11,844 ] - Epoch 5/5 - time: 1.37 - training_loss: -0.6405 - val_loss: -0.8887
+[ INFO : 2022-07-19 20:53:12,759 ] - loss on validation data: -0.9010
+[ INFO : 2022-07-19 20:53:13,220 ] - loss on test data: -0.9010
+[ INFO : 2022-07-19 20:54:19,254 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:54:19,255 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:54:20,625 ] - Epoch 1: val_loss improved from 0.0000 to -0.1645, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:20,630 ] - Epoch 1/5 - time: 1.37 - training_loss: -0.6067 - val_loss: -0.1645
+[ INFO : 2022-07-19 20:54:21,982 ] - Epoch 2: val_loss improved from -0.1645 to -0.8200, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:21,986 ] - Epoch 2/5 - time: 1.36 - training_loss: -0.6072 - val_loss: -0.8200
+[ INFO : 2022-07-19 20:54:23,303 ] - Epoch 3: val_loss did not improve from -0.8200
+[ INFO : 2022-07-19 20:54:23,303 ] - Epoch 3/5 - time: 1.32 - training_loss: -0.6082 - val_loss: -0.6400
+[ INFO : 2022-07-19 20:54:24,613 ] - Epoch 4: val_loss improved from -0.8200 to -0.8220, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:24,617 ] - Epoch 4/5 - time: 1.31 - training_loss: -0.6093 - val_loss: -0.8220
+[ INFO : 2022-07-19 20:54:25,991 ] - Epoch 5: val_loss did not improve from -0.8220
+[ INFO : 2022-07-19 20:54:25,991 ] - Epoch 5/5 - time: 1.37 - training_loss: -0.6133 - val_loss: -0.8132
+[ INFO : 2022-07-19 20:54:26,928 ] - loss on validation data: -0.8220
+[ INFO : 2022-07-19 20:54:27,386 ] - loss on test data: -0.8220
+[ INFO : 2022-07-19 20:54:43,968 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 20:54:43,969 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 20:54:45,351 ] - Epoch 1: val_loss improved from 0.0000 to -0.2237, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:45,356 ] - Epoch 1/5 - time: 1.39 - training_loss: -0.5807 - val_loss: -0.2237
+[ INFO : 2022-07-19 20:54:46,711 ] - Epoch 2: val_loss improved from -0.2237 to -0.8388, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:46,717 ] - Epoch 2/5 - time: 1.36 - training_loss: -0.6050 - val_loss: -0.8388
+[ INFO : 2022-07-19 20:54:48,022 ] - Epoch 3: val_loss improved from -0.8388 to -0.8877, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:48,026 ] - Epoch 3/5 - time: 1.31 - training_loss: -0.6122 - val_loss: -0.8877
+[ INFO : 2022-07-19 20:54:49,359 ] - Epoch 4: val_loss improved from -0.8877 to -0.8970, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:49,363 ] - Epoch 4/5 - time: 1.34 - training_loss: -0.6172 - val_loss: -0.8970
+[ INFO : 2022-07-19 20:54:50,775 ] - Epoch 5: val_loss improved from -0.8970 to -0.8988, saving model to checkpoint.model
+[ INFO : 2022-07-19 20:54:50,779 ] - Epoch 5/5 - time: 1.42 - training_loss: -0.6163 - val_loss: -0.8988
+[ INFO : 2022-07-19 20:54:51,709 ] - loss on validation data: -0.8988
+[ INFO : 2022-07-19 20:54:52,173 ] - loss on test data: -0.8988
+[ INFO : 2022-07-19 21:04:01,263 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 21:04:01,264 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 21:04:02,767 ] - Epoch 1: val_loss improved from 0.0000 to -0.1515, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:04:02,772 ] - Epoch 1/5 - time: 1.51 - training_loss: -0.6399 - val_loss: -0.1515
+[ INFO : 2022-07-19 21:04:04,161 ] - Epoch 2: val_loss improved from -0.1515 to -0.8234, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:04:04,165 ] - Epoch 2/5 - time: 1.39 - training_loss: -0.6335 - val_loss: -0.8234
+[ INFO : 2022-07-19 21:04:05,521 ] - Epoch 3: val_loss improved from -0.8234 to -0.8591, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:04:05,525 ] - Epoch 3/5 - time: 1.36 - training_loss: -0.6182 - val_loss: -0.8591
+[ INFO : 2022-07-19 21:04:06,919 ] - Epoch 4: val_loss did not improve from -0.8591
+[ INFO : 2022-07-19 21:04:06,919 ] - Epoch 4/5 - time: 1.39 - training_loss: -0.6241 - val_loss: -0.8556
+[ INFO : 2022-07-19 21:04:08,316 ] - Epoch 5: val_loss did not improve from -0.8591
+[ INFO : 2022-07-19 21:04:08,316 ] - Epoch 5/5 - time: 1.40 - training_loss: -0.6280 - val_loss: -0.8080
+[ INFO : 2022-07-19 21:04:09,255 ] - loss on validation data: -0.8591
+[ INFO : 2022-07-19 21:04:09,749 ] - loss on test data: -0.8591
+[ INFO : 2022-07-19 21:06:41,076 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 21:06:41,078 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 21:06:42,482 ] - Epoch 1: val_loss improved from 0.0000 to -0.1506, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:06:42,488 ] - Epoch 1/5 - time: 1.41 - training_loss: -0.5848 - val_loss: -0.1506
+[ INFO : 2022-07-19 21:06:43,862 ] - Epoch 2: val_loss improved from -0.1506 to -0.8077, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:06:43,866 ] - Epoch 2/5 - time: 1.38 - training_loss: -0.6021 - val_loss: -0.8077
+[ INFO : 2022-07-19 21:06:45,203 ] - Epoch 3: val_loss did not improve from -0.8077
+[ INFO : 2022-07-19 21:06:45,203 ] - Epoch 3/5 - time: 1.34 - training_loss: -0.6111 - val_loss: -0.7944
+[ INFO : 2022-07-19 21:06:46,578 ] - Epoch 4: val_loss did not improve from -0.8077
+[ INFO : 2022-07-19 21:06:46,578 ] - Epoch 4/5 - time: 1.37 - training_loss: -0.6076 - val_loss: -0.7002
+[ INFO : 2022-07-19 21:06:47,903 ] - Epoch 5: val_loss did not improve from -0.8077
+[ INFO : 2022-07-19 21:06:47,903 ] - Epoch 5/5 - time: 1.32 - training_loss: -0.6114 - val_loss: -0.7897
+[ INFO : 2022-07-19 21:06:48,810 ] - loss on validation data: -0.8077
+[ INFO : 2022-07-19 21:06:49,264 ] - loss on test data: -0.8077
+[ INFO : 2022-07-19 21:09:52,733 ] - DeepCCA(
+  (model1): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=6, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+  (model2): MlpNet(
+    (layers): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=8, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (2): Sequential(
+        (0): Linear(in_features=24, out_features=24, bias=True)
+        (1): Sigmoid()
+        (2): BatchNorm1d(24, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+      )
+      (3): Sequential(
+        (0): Linear(in_features=24, out_features=2, bias=True)
+      )
+    )
+  )
+)
+[ INFO : 2022-07-19 21:09:52,734 ] - RMSprop (
+Parameter Group 0
+    alpha: 0.99
+    centered: False
+    eps: 1e-08
+    lr: 0.001
+    momentum: 0
+    weight_decay: 1e-05
+)
+[ INFO : 2022-07-19 21:09:54,091 ] - Epoch 1: val_loss improved from 0.0000 to -0.1902, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:09:54,096 ] - Epoch 1/5 - time: 1.36 - training_loss: -0.6263 - val_loss: -0.1902
+[ INFO : 2022-07-19 21:09:55,485 ] - Epoch 2: val_loss improved from -0.1902 to -0.9196, saving model to checkpoint.model
+[ INFO : 2022-07-19 21:09:55,489 ] - Epoch 2/5 - time: 1.39 - training_loss: -0.6169 - val_loss: -0.9196
+[ INFO : 2022-07-19 21:09:56,830 ] - Epoch 3: val_loss did not improve from -0.9196
+[ INFO : 2022-07-19 21:09:56,831 ] - Epoch 3/5 - time: 1.34 - training_loss: -0.6373 - val_loss: -0.8584
+[ INFO : 2022-07-19 21:09:58,205 ] - Epoch 4: val_loss did not improve from -0.9196
+[ INFO : 2022-07-19 21:09:58,205 ] - Epoch 4/5 - time: 1.37 - training_loss: -0.6255 - val_loss: -0.4622
+[ INFO : 2022-07-19 21:09:59,521 ] - Epoch 5: val_loss did not improve from -0.9196
+[ INFO : 2022-07-19 21:09:59,521 ] - Epoch 5/5 - time: 1.32 - training_loss: -0.6158 - val_loss: -0.6796
+[ INFO : 2022-07-19 21:10:00,430 ] - loss on validation data: -0.9196
+[ INFO : 2022-07-19 21:10:00,903 ] - loss on test data: -0.9196

@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 100
+    epoch_num = 5
     batch_size = 16
 
     # the regularization parameter
@@ -48,13 +48,41 @@ if __name__ == '__main__':
     
     ##########
     # DCCA
-    model = DeepCCA(layer1_size,layer2_size,output_size,use_all_singular_values,device=device).double()
+    model = DeepCCA(
+        layer1_size,
+        layer2_size,
+        output_size,
+        use_all_singular_values,
+        device=device
+    ).double()
     
     linear_cca = None
     if apply_linear_cca:
         linear_cca = LinearCCA()
     
-    solver = TrainDCCA(model,linear_cca,output_size,learning_rate,epoch_num,batch_size,reg_para,device=device)
+    solver = TrainDCCA(
+        model,
+        linear_cca,
+        output_size,
+        learning_rate,
+        epoch_num,
+        batch_size,
+        reg_para,
+        device=device
+    )
 
-    solver.fit(X_train,Y_train,X_val,Y_val,X_test,Y_test)
+    solver.fit(
+        X_train,
+        Y_train,
+        X_val,
+        Y_val,
+        X_test,
+        Y_test
+    )
+
+    loss, output = solver.test(
+        torch.cat([X_train,X_val,X_test],dim=0),
+        torch.cat([Y_train,Y_val,Y_test],dim=0),
+        apply_linear_cca
+    )
     ##########

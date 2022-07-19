@@ -43,10 +43,13 @@ class GetDataset():
 
     def splitDataXY(self,data):
         size1,size2 = data.shape
+
         train_size = int(size2*0.6)
         val_size = int(size2*0.2)
         test_size = size2-train_size-val_size
+        
         train_dataset,val_dataset,test_dataset = random_split(data.T,[train_size,val_size,test_size])
+
         train_dataset = torch.tensor(train_dataset.dataset)
         val_dataset = torch.tensor(val_dataset.dataset)
         test_dataset = torch.tensor(test_dataset.dataset)

@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 1
+    epoch_num = 100
     batch_size = 16
 
     # the regularization parameter

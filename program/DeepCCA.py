@@ -4,8 +4,9 @@ import torch.nn as nn
 
 class MlpNet(nn.Module):
 
-    def __init__(self,layer_size):
+    def __init__(self,layer_size,device=torch.device('cpu')):
         super().__init__()
+        self.device = device
         layers=[]
         for lIdx in range(len(layer_size)-1):
             if lIdx == len(layer_size)-2:
@@ -27,6 +28,8 @@ class MlpNet(nn.Module):
     def forward(self,x):
         # forward propagation function
         for layer in self.layers:
+            x = x.to(self.device)
+            layer = layer.to(self.device)
             x = layer(x)
         return x
 
@@ -98,8 +101,8 @@ class DeepCCA(nn.Module):
 
     def __init__(self,layer1_size,layer2_size,output_size,use_all_singular_values,device=torch.device('cpu')):
         super().__init__()
-        self.model1 = MlpNet(layer1_size).double()
-        self.model2 = MlpNet(layer2_size).double()
+        self.model1 = MlpNet(layer1_size,device).double()
+        self.model2 = MlpNet(layer2_size,device).double()
         
         self.loss = DCCALoss(output_size,use_all_singular_values,device).loss
         

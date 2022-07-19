@@ -19,7 +19,7 @@ class MlpNet(nn.Module):
                     nn.Sequential(
                         nn.Linear(layer_size[lIdx],layer_size[lIdx+1]),
                         nn.Sigmoid(),
-                        nn.BatchNorm1d(num_features = layer_size[lIdx+1],affline = False)
+                        nn.BatchNorm1d(num_features = layer_size[lIdx+1],affine=False)
                     )
                 )
         self.layers = nn.ModuleList(layers)

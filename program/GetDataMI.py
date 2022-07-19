@@ -24,7 +24,7 @@ def GetPath(num1,num2):
     return path
 
 
-def GetDataset(num1,num2):
+def GetData(num1,num2):
     import mne
     import numpy as np
 
@@ -75,4 +75,4 @@ def GetDataset(num1,num2):
     return T1,T2
 
 if __name__=='__main__':
-    GetDataset(1,12)
+    GetData(1,12)

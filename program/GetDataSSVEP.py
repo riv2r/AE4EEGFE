@@ -8,7 +8,7 @@ from mne.preprocessing import ICA
 import matplotlib.pyplot as plt
 import time
 
-class GetDataset(object):
+class GetData():
 
     def preProcessing(self,raw):
         # resampling 1000Hz -> 250Hz
@@ -76,7 +76,7 @@ if __name__=='__main__':
     ed_time = st_time+last_time
     raw = raw.crop(st_time,ed_time)
 
-    dataset=GetDataset() 
+    dataset=GetData() 
 
     raw=dataset.preProcessing(raw)
     raw=dataset.repairEOGByICA(raw)

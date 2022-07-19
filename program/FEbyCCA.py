@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cross_decomposition import CCA
-import GetDataSSVEP
+from GetDataSSVEP import GetData
 import mne
 import time
 
@@ -87,7 +87,7 @@ if __name__=='__main__':
     ed_time = st_time+last_time
     raw = raw.crop(st_time,ed_time)
 
-    dataset=GetDataSSVEP.GetDataset()    
+    dataset=GetData()    
 
     raw=dataset.preProcessing(raw)
     raw=dataset.repairEOGByICA(raw)

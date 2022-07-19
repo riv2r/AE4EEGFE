@@ -3,7 +3,7 @@ import numpy as np
 class LinearCCA():
 
     def __init__(self):
-        self.transMtx = [None, None]
+        self.l_coeff = [None, None]
         self.mean = [None, None]
 
     def fit(self, H1, H2, output_size):
@@ -45,6 +45,15 @@ class LinearCCA():
         [U,D,V] = np.linalg.svd(Tval)
         V= V.T
 
-        self.transMtx[0] = np.dot(sigmaH11Inv, U[:, 0:output_size])
-        self.transMtx[1] = np.dot(sigmaH22Inv, V[:, 0:output_size])
+        self.l_coeff[0] = np.dot(sigmaH11Inv, U[:, 0:output_size])
+        self.l_coeff[1] = np.dot(sigmaH22Inv, V[:, 0:output_size])
         D = D[0:output_size]
+
+    def _get_result(self,x,idx):
+        rst = x - self.mean[idx].reshape(1,-1).repeat(len(x),axis=0)
+        rst = np.dot(rst,self.l_coeff[idx])
+
+        return rst
+    
+    def test(self,H1,H2):
+        return self._get_result(H1,0), self._get_result(H2,1)

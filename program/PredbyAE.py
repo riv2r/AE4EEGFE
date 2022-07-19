@@ -1,15 +1,13 @@
 # evaluate logistic regression on encoded input
-import GetDataMI
-from sklearn.datasets import make_classification
+from GetDataMI import GetData
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import load_model
 import numpy as np
 # get dataset
-Tz,Ty=GetDataMI.GetDataset(1, 12)
+Tz,Ty=GetData(1, 12)
 # 向左向右运动想象
 X=np.vstack((Tz.T,Ty.T))
 y=np.vstack((np.ones((np.shape(Tz.T)[0],1)),np.zeros((np.shape(Ty.T)[0],1))))

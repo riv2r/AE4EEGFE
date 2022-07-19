@@ -1,12 +1,9 @@
 # train autoencoder for classification with no compression in the bottleneck layer
 
-import GetDataMI
+from GetDataMI import GetData
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
-from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LeakyReLU
@@ -16,7 +13,7 @@ from matplotlib import pyplot
 import numpy as np
 
 # get dataset
-Tz,Ty=GetDataMI.GetDataset(1,12)
+Tz,Ty=GetData(1,12)
 # 向左向右运动想象
 X=np.vstack((Tz.T,Ty.T))
 y=np.vstack((np.ones((np.shape(Tz.T)[0],1)),np.zeros((np.shape(Ty.T)[0],1))))

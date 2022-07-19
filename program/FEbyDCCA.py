@@ -1,9 +1,11 @@
 import torch
 from DeepCCA import DeepCCA
 from LinearCCA import LinearCCA
+from TrainDCCA import TrainDCCA
+from DatasetDCCA import GetDataset
 
 if __name__ == '__main__':
-    #####
+    ##########
     # parameters initialize
 
     device = torch.device('cuda')
@@ -34,17 +36,25 @@ if __name__ == '__main__':
 
     # if a linear CCA should get applied on the learned features extracted from the networks
     apply_linear_cca = True
-    #####
+    ##########
     
-    #####
+    ##########
     # dataset
-
-    #####
+    dataset = GetDataset()
+    dataX,dataY = dataset.getDataXY()
+    X_train,X_val,X_test = dataset.splitDataXY(dataX[0])
+    Y_train,Y_val,Y_test = dataset.splitDataXY(dataY[0,:,:])
+    ##########
     
-    #####
+    ##########
     # DCCA
-    model = DeepCCA(layer1_size, layer2_size, output_size, use_all_singular_values, device)
+    model = DeepCCA(layer1_size,layer2_size,output_size,use_all_singular_values,device)
+    
     linear_cca = None
     if apply_linear_cca:
         linear_cca = LinearCCA()
-    #####
+    
+    solver = TrainDCCA(model,linear_cca,output_size,learning_rate,epoch_num,batch_size,reg_para,device)
+
+    solver.fit(X_train,Y_train,X_val,Y_val,X_test,Y_test)
+    ##########

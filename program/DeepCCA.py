@@ -94,7 +94,7 @@ class DCCALoss():
 
         if self.use_all_singular_values:
             temp = torch.matmul(Tval.t(),Tval)
-            corr = torch.trace(torch.sqrt(temp))
+            corr = torch.sqrt(torch.trace(temp))
         else:
             trace_TT = torch.matmul(Tval.t(),Tval)
             trace_TT = torch.add(trace_TT, (torch.eye(trace_TT.size(0))*r1).to(self.device))

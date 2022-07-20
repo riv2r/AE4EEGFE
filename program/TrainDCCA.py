@@ -42,7 +42,7 @@ class TrainDCCA():
 
         x1.to(self.device)
         x2.to(self.device)
-        
+        # data_size is numSamplingPoints 
         data_size = x1.size(0)
         
         if vx1 is not None and vx2 is not None:

@@ -19,7 +19,7 @@ class MlpNet(nn.Module):
                 layers.append(
                     nn.Sequential(
                         nn.Linear(layer_size[lIdx],layer_size[lIdx+1]),
-                        nn.Sigmoid(),
+                        nn.ReLU(),
                         nn.BatchNorm1d(num_features = layer_size[lIdx+1],affine=False)
                     )
                 )
@@ -28,6 +28,7 @@ class MlpNet(nn.Module):
     def forward(self,x):
         # forward propagation function
         for layer in self.layers:
+            # avoid this compute part be moved on CPU
             x = x.to(self.device)
             layer = layer.to(self.device)
             x = layer(x)
@@ -45,23 +46,31 @@ class DCCALoss():
         r1 = 1e-3
         r2 = 1e-3
         eps = 1e-9
-
+        # H1 and H2 are tensors
+        # H1 (numSamplingPoints,numChans) (1250,6)
+        # H2 (numSamplingPoints,numHarmonics) (1250,8)
         H1, H2 =H1.t(), H2.t()
+        # H1 (6,1250)
+        # H2 (8,1250)
 
-        o,m =H1.size()
+        o1 = H1.size(0)
+        o2 = H2.size(0)
+        m = H1.size(1)
 
         # centered data
+        # H.mean(dim=1) compute row's mean
         H1bar = H1 - H1.mean(dim=1).unsqueeze(dim=1)
         H2bar = H2 - H2.mean(dim=1).unsqueeze(dim=1)
 
         sigmaH12 = (1.0/(m-1))*torch.matmul(H1bar,H2bar.t())
-        sigmaH11 = (1.0/(m-1))*torch.matmul(H1bar,H1bar.t())+r1*torch.eye(o,device=self.device)
-        sigmaH22 = (1.0/(m-1))*torch.matmul(H2bar,H2bar.t())+r2*torch.eye(o,device=self.device)
+        sigmaH11 = (1.0/(m-1))*torch.matmul(H1bar,H1bar.t())+r1*torch.eye(o1,device=self.device)
+        sigmaH22 = (1.0/(m-1))*torch.matmul(H2bar,H2bar.t())+r2*torch.eye(o2,device=self.device)
 
         # Eigenvalue Decomposition
         [D1,V1]=torch.symeig(sigmaH11,eigenvectors=True)
         [D2,V2]=torch.symeig(sigmaH22,eigenvectors=True)
         # increase stability
+        # gt(a,b) get indexs point to a > b
         posIdx1 = torch.gt(D1,eps).nonzero()[:,0]
         D1 = D1[posIdx1]
         V1 = V1[:,posIdx1]

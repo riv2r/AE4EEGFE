@@ -3,6 +3,8 @@ from DeepCCA import DeepCCA
 from LinearCCA import LinearCCA
 from TrainDCCA import TrainDCCA
 from DatasetDCCA import GetDataset
+from sklearn.cross_decomposition import CCA
+import numpy as np
 
 if __name__ == '__main__':
     ##########
@@ -10,21 +12,21 @@ if __name__ == '__main__':
 
     device = torch.device('cuda')
 
-    # output size
-    output_size = 2
-
     # input size
     input1_size = 6
     input2_size = 8
+    
+    # output size
+    output_size = input1_size + input2_size
 
     # layers size
-    layer1_size = [input1_size,24,24,24,output_size]
-    layer2_size = [input2_size,24,24,24,output_size]
+    layer1_size = [input1_size,48,48,48,output_size]
+    layer2_size = [input2_size,48,48,48,output_size]
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 5
-    batch_size = 16
+    epoch_num = 200
+    batch_size = 100
 
     # the regularization parameter
     # seems necessary to avoid the gradient exploding especially when non-saturating activations are used
@@ -81,8 +83,31 @@ if __name__ == '__main__':
     )
 
     loss, output = solver.test(
-        torch.cat([X_train,X_val,X_test],dim=0),
-        torch.cat([Y_train,Y_val,Y_test],dim=0),
+        torch.from_numpy(dataX[0].T),
+        torch.from_numpy(dataY[0,:,:].T),
         apply_linear_cca
     )
+
+    X=output[0] 
+    Y=output[1]
+    
+    n_components = 5
+    cca_2 = CCA(n_components)
+    cca_2.fit(X,Y)
+    X,Y = cca_2.transform(X,Y)
+    now_corr=np.zeros(n_components)
+    for i in range(n_components):
+        now_corr[i]= np.corrcoef(X[:,0],Y[:,0])[0,1]
+    now_corr = np.max(now_corr)
+
+    cca_1 = CCA(n_components)
+    cca_1.fit(dataX[0].T,dataY[0,:,:].T)
+    X,Y = cca_1.transform(dataX[0].T,dataY[0,:,:].T)
+    origin_corr=np.zeros(n_components)
+    for i in range(n_components):
+        origin_corr[i]= np.corrcoef(X[:,0],Y[:,0])[0,1]
+    origin_corr = np.max(origin_corr)
+
+    print(origin_corr)
+    print(now_corr)
     ##########

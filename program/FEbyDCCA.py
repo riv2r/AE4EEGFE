@@ -1,8 +1,8 @@
 import torch
+from DatasetDCCA import GetDataset
 from DeepCCA import DeepCCA
 from LinearCCA import LinearCCA
 from TrainDCCA import TrainDCCA
-from DatasetDCCA import GetDataset
 from sklearn.cross_decomposition import CCA
 import numpy as np
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 200
-    batch_size = 100
+    epoch_num = 1000
+    batch_size = 128
 
     # the regularization parameter
     # seems necessary to avoid the gradient exploding especially when non-saturating activations are used

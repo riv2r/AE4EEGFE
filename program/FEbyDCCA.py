@@ -3,8 +3,6 @@ from DatasetDCCA import GetDataset
 from DeepCCA import DeepCCA
 from LinearCCA import LinearCCA
 from TrainDCCA import TrainDCCA
-from sklearn.cross_decomposition import CCA
-import numpy as np
 
 if __name__ == '__main__':
     ##########
@@ -83,31 +81,13 @@ if __name__ == '__main__':
     )
 
     loss, output = solver.test(
-        torch.from_numpy(dataX[0].T),
-        torch.from_numpy(dataY[0,:,:].T),
+        X_test,
+        Y_test,
         apply_linear_cca
     )
+    ##########
 
-    X=output[0] 
-    Y=output[1]
-    
-    n_components = 5
-    cca_2 = CCA(n_components)
-    cca_2.fit(X,Y)
-    X,Y = cca_2.transform(X,Y)
-    now_corr=np.zeros(n_components)
-    for i in range(n_components):
-        now_corr[i]= np.corrcoef(X[:,0],Y[:,0])[0,1]
-    now_corr = np.max(now_corr)
-
-    cca_1 = CCA(n_components)
-    cca_1.fit(dataX[0].T,dataY[0,:,:].T)
-    X,Y = cca_1.transform(dataX[0].T,dataY[0,:,:].T)
-    origin_corr=np.zeros(n_components)
-    for i in range(n_components):
-        origin_corr[i]= np.corrcoef(X[:,0],Y[:,0])[0,1]
-    origin_corr = np.max(origin_corr)
-
-    print(origin_corr)
-    print(now_corr)
+    ##########
+    # result contrast
+    print(-loss)
     ##########

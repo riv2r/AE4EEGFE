@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-
 class MlpNet(nn.Module):
 
     def __init__(self,layer_size,device=torch.device('cpu')):
@@ -35,7 +34,7 @@ class MlpNet(nn.Module):
         return x
 
 
-class DCCALoss():
+class CCALoss():
     
     def __init__(self,output_size,use_all_singular_values,device):
         self.output_size = output_size
@@ -113,7 +112,7 @@ class DeepCCA(nn.Module):
         self.model1 = MlpNet(layer1_size,device).double()
         self.model2 = MlpNet(layer2_size,device).double()
         
-        self.loss = DCCALoss(output_size,use_all_singular_values,device).loss
+        self.loss = CCALoss(output_size,use_all_singular_values,device).loss
         
     def forward(self,x1,x2):
         output1 = self.model1(x1)

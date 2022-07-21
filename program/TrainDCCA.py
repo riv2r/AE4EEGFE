@@ -59,7 +59,7 @@ class TrainDCCA():
             self.model.train()
             batch_idxs = list(
                 BatchSampler(
-                    RandomSampler(
+                    SequentialSampler(
                         range(data_size)
                     ),
                     batch_size=self.batch_size,

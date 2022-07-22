@@ -4,14 +4,17 @@ from GetDataSSVEP import GetData
 import mne
 import time
 
+
 class FEbyCCA(object):
 
     def __init__(self):
+
         self.freqs          =   [6.67,7.5,8.57,10.0,12.0]
         self.samplingRate   =   1000
         self.numSamplingPoints = 5000
 
     def initialize(self):
+
         # Set SSVEP flicker frequencies
         self.freqs = input('Input Frequencies:')
         self.freqs = (self.freqs).split(',')
@@ -24,6 +27,7 @@ class FEbyCCA(object):
         self.numSamplingPoints = float(self.numSamplingPoints)
 
     def getReferSignals(self,targFreq):
+
         # get reference signals
         referSignals = []
         # number of harmonics
@@ -41,6 +45,7 @@ class FEbyCCA(object):
         return referSignals
 
     def findCorr(self,n_components,EEGDataset,freqSet):
+
         # Perform Canonical Correlation Analysis (CCA)
         # freqSet - set of sinusoidal reference templates corresponding to the flicker frequency
         cca = CCA(n_components)
@@ -53,9 +58,11 @@ class FEbyCCA(object):
             for indVal in range(n_components):
                 corr[indVal]=np.corrcoef(X_train[:,indVal],Y_train[:,indVal])[0,1]
             rst[freqIdx]=np.max(corr)
+
         return rst
 
     def process(self,EEGDataset):
+
         freqSet=[]
         for freq in self.freqs:
             freqTemp=self.getReferSignals(freq)
@@ -68,7 +75,6 @@ class FEbyCCA(object):
         # print(predClass)
 
         return predClass
-
 
 
 if __name__=='__main__':
@@ -92,7 +98,6 @@ if __name__=='__main__':
     raw=dataset.preProcessing(raw)
     raw=dataset.repairEOGByICA(raw)
     data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
-    
 
     #-----FEbyCCA-----#
     temp = FEbyCCA()

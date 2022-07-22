@@ -8,9 +8,11 @@ from mne.preprocessing import ICA
 import matplotlib.pyplot as plt
 import time
 
+
 class GetData():
 
     def preProcessing(self,raw):
+
         # resampling 1000Hz -> 250Hz
         raw_downsampled = raw.copy().resample(sfreq=250)
         # notch filter 50.0Hz
@@ -21,6 +23,7 @@ class GetData():
         return raw_filt
 
     def repairEOGByICA(self,raw):
+
         # apply ICA
         ica = ICA(max_iter='auto', random_state=80) 
         # 20th channel named 'IO' is EOG channel
@@ -48,6 +51,7 @@ class GetData():
         return raw_reconst
 
     def getEpochs(self,raw):
+
         epochs = mne.make_fixed_length_epochs(raw, duration=5)
         data = epochs.get_data()
         t = epochs.times
@@ -57,7 +61,6 @@ class GetData():
         samplingRate = raw.info['sfreq']
         
         return data,t,numGroups,numChans,numSamplingPoints,samplingRate
-
 
 
 if __name__=='__main__':

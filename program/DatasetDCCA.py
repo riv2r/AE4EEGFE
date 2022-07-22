@@ -1,13 +1,14 @@
 import mne
+import torch
+import numpy as np
 from GetDataSSVEP import GetData
 from FEbyCCA import FEbyCCA
-import numpy as np
 from torch.utils.data import random_split
-import torch
 
 class GetDataset():
 
     def getDataXY(self):
+
         path = 'dataset/SSVEPEEGData/car.vhdr'
         raw = mne.io.read_raw_brainvision(path) 
 
@@ -17,7 +18,7 @@ class GetDataset():
         # By observation
         # 12 9.5 9
         last_time = 125
-        st_time =12
+        st_time = 12
         ed_time = st_time+last_time
         raw = raw.crop(st_time,ed_time)
 
@@ -37,16 +38,19 @@ class GetDataset():
             freqTemp=dataset2.getReferSignals(freq)
             dataY.append(freqTemp)
         # dataY: 5 x 8 x 1250
-        dataY=np.array(dataY)
+        dataY = np.array(dataY).reshape((5,8,1250))
 
         return dataX,dataY
 
-    def splitDataXY(self,data):
-        size1,size2 = data.shape
 
-        train_size = int(size2*0.6)
-        val_size = int(size2*0.2)
-        test_size = size2-train_size-val_size
+
+    def splitDataXY(self,data):
+
+        numSamplingPoints = data.shape[1]
+
+        train_size  = int(numSamplingPoints*0.6)
+        val_size    = int(numSamplingPoints*0.2)
+        test_size   = numSamplingPoints-train_size-val_size
         
         ''' 
         train_dataset,val_dataset,test_dataset = random_split(data.T,[train_size,val_size,test_size])
@@ -57,8 +61,8 @@ class GetDataset():
         '''
         
         data = data.T
-        train_dataset = torch.tensor(data[0:train_size,:])
-        val_dataset = torch.tensor(data[train_size:train_size+val_size,:])
-        test_dataset = torch.tensor(data[train_size+val_size:size2,:])
+        train_dataset   = torch.tensor(data[0                   :train_size                     ,:])
+        val_dataset     = torch.tensor(data[train_size          :train_size+val_size            ,:])
+        test_dataset    = torch.tensor(data[train_size+val_size :train_size+val_size+test_size  ,:])
 
         return train_dataset,val_dataset,test_dataset

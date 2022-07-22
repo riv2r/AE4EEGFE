@@ -4,6 +4,7 @@
 # num2 实验序号
 
 def GetPath(num1,num2):
+
     # 109名实验人员
     # 4 8 12 是关于左右方向的运动想象EEG
     fampath='dataset/eeg-motor-movementimagery-dataset-1.0.0/files/'
@@ -23,8 +24,8 @@ def GetPath(num1,num2):
     
     return path
 
-
 def GetData(num1,num2):
+
     import mne
     import numpy as np
 
@@ -67,6 +68,7 @@ def GetData(num1,num2):
             else:
                 end_num=events[i+1,0]
             T2=np.hstack((T2,raw[0:64][0][:,start_num:end_num]))
+            
     #delete 初始列
     T0=np.delete(T0,0,axis=1)
     T1=np.delete(T1,0,axis=1)
@@ -75,4 +77,5 @@ def GetData(num1,num2):
     return T1,T2
 
 if __name__=='__main__':
+
     GetData(1,12)

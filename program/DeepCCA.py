@@ -4,13 +4,14 @@ import torch.nn as nn
 class MlpNet(nn.Module):
 
     def __init__(self,layer_size,device=torch.device('cpu')):
-        super().__init__()
+        super(MlpNet,self).__init__()
         self.device = device
         layers=[]
         for lIdx in range(len(layer_size)-1):
             if lIdx == len(layer_size)-2:
                 layers.append(
                     nn.Sequential(
+                        nn.BatchNorm1d(num_features=layer_size[lIdx],affine=False),
                         nn.Linear(layer_size[lIdx],layer_size[lIdx+1])
                     )
                 )
@@ -18,7 +19,7 @@ class MlpNet(nn.Module):
                 layers.append(
                     nn.Sequential(
                         nn.Linear(layer_size[lIdx],layer_size[lIdx+1]),
-                        nn.ReLU(),
+                        nn.Sigmoid(),
                         nn.BatchNorm1d(num_features = layer_size[lIdx+1],affine=False)
                     )
                 )

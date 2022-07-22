@@ -1,14 +1,16 @@
-import torch
-import logging
 import time
-from torch.utils.data import BatchSampler, RandomSampler, SequentialSampler
+import logging
+import torch
 import numpy as np
+from torch.utils.data import BatchSampler, RandomSampler, SequentialSampler
 
 class TrainDCCA():
 
-    def __init__(self,model,linear_cca,output_size,learning_rate,epoch_num,batch_size,reg_para,device=torch.device('cpu')):
+    def __init__(self,model,output_size,linear_cca,epoch_num,batch_size,learning_rate,reg_para,device=torch.device('cpu')):
         self.model = model
         self.model.to(device)
+        self.output_size = output_size
+        self.linear_cca = linear_cca
         # epoch_num: The number of times to traverse the training set
         self.epoch_num = epoch_num
         self.batch_size = batch_size
@@ -20,23 +22,22 @@ class TrainDCCA():
             weight_decay=reg_para
         )
         self.device =device
-        self.linear_cca = linear_cca
-        self.output_size = output_size
 
-        formatter = logging.Formatter(
-            "[ %(levelname)s : %(asctime)s ] - %(message)s"
-        )
+
         logging.basicConfig(
             level=logging.DEBUG,
             format="[ %(levelname)s : %(asctime)s ] - %(message)s"
         )
         self.logger = logging.getLogger("PyTorch")
         filehandler = logging.FileHandler("DCCA.log")
+        formatter = logging.Formatter(
+            "[ %(levelname)s : %(asctime)s ] - %(message)s"
+        )
         filehandler.setFormatter(formatter)
         self.logger.addHandler(filehandler)
-
         self.logger.info(self.model)
         self.logger.info(self.optimizer)
+
 
     def fit(self,x1,x2,vx1=None,vx2=None,tx1=None,tx2=None,checkpoint='checkpoint.model'):
 
@@ -59,7 +60,7 @@ class TrainDCCA():
             self.model.train()
             batch_idxs = list(
                 BatchSampler(
-                    SequentialSampler(
+                    RandomSampler(
                         range(data_size)
                     ),
                     batch_size=self.batch_size,
@@ -78,6 +79,7 @@ class TrainDCCA():
                 train_losses.append(loss.item())
                 loss.backward()
                 self.optimizer.step()
+
             train_loss = np.mean(train_losses) 
 
             info_string = "Epoch {:d}/{:d} - time: {:.2f} - training_loss: {:.4f}"

@@ -1,11 +1,8 @@
-# 忽略论文集
-paper/
-
 # 忽略原始数据集文件
 dataset/
 
-# 忽略结果文件
-# rst/
+# 忽略论文集
+paper/
 
 # 忽略.py程序运行缓存文件
 program/__pycache__/

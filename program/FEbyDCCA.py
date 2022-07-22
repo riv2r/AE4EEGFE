@@ -25,8 +25,8 @@ if __name__ == '__main__':
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 100
-    batch_size = 800
+    epoch_num = 1000
+    batch_size = 512
 
     # the regularization parameter
     # seems necessary to avoid the gradient exploding especially when non-saturating activations are used
@@ -44,8 +44,8 @@ if __name__ == '__main__':
     # dataset
     dataset = GetDataset()
     dataX,dataY = dataset.getDataXY()
-    X_train,X_val,X_test = dataset.splitDataXY(dataX[0])
-    Y_train,Y_val,Y_test = dataset.splitDataXY(dataY[0])
+    X_train,X_val,X_test = dataset.splitDataXY(dataX[9])
+    Y_train,Y_val,Y_test = dataset.splitDataXY(dataY[4])
     ##########
     
     ##########
@@ -94,8 +94,8 @@ if __name__ == '__main__':
     n_components = 1
     cca = CCA(n_components)
     corr = np.zeros(n_components) 
-    cca.fit(dataX[0].T,dataY[0].T)
-    X_train,Y_train = cca.transform(dataX[0].T,dataY[0].T)
+    cca.fit(dataX[9].T,dataY[4].T)
+    X_train,Y_train = cca.transform(dataX[9].T,dataY[4].T)
     indVal = 0
     for indVal in range(n_components):
         corr[indVal]=np.corrcoef(X_train[:,indVal],Y_train[:,indVal])[0,1]
@@ -103,7 +103,6 @@ if __name__ == '__main__':
     
     cca = CCA(n_components)
     corr = np.zeros(n_components) 
-    print(output[0].shape)
     cca.fit(output[0],output[1])
     X_train,Y_train = cca.transform(output[0],output[1])
     indVal = 0

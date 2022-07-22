@@ -3,6 +3,8 @@ from DatasetDCCA import GetDataset
 from DeepCCA import DeepCCA
 from LinearCCA import LinearCCA
 from TrainDCCA import TrainDCCA
+from sklearn.cross_decomposition import CCA
+import numpy as np
 
 if __name__ == '__main__':
     ##########
@@ -23,8 +25,8 @@ if __name__ == '__main__':
 
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 1000
-    batch_size = 128
+    epoch_num = 100
+    batch_size = 800
 
     # the regularization parameter
     # seems necessary to avoid the gradient exploding especially when non-saturating activations are used
@@ -43,7 +45,7 @@ if __name__ == '__main__':
     dataset = GetDataset()
     dataX,dataY = dataset.getDataXY()
     X_train,X_val,X_test = dataset.splitDataXY(dataX[0])
-    Y_train,Y_val,Y_test = dataset.splitDataXY(dataY[0,:,:])
+    Y_train,Y_val,Y_test = dataset.splitDataXY(dataY[0])
     ##########
     
     ##########
@@ -62,11 +64,11 @@ if __name__ == '__main__':
     
     solver = TrainDCCA(
         model,
-        linear_cca,
         output_size,
-        learning_rate,
+        linear_cca,
         epoch_num,
         batch_size,
+        learning_rate,
         reg_para,
         device=device
     )
@@ -89,5 +91,26 @@ if __name__ == '__main__':
 
     ##########
     # result contrast
-    print(-loss)
+    n_components = 1
+    cca = CCA(n_components)
+    corr = np.zeros(n_components) 
+    cca.fit(dataX[0].T,dataY[0].T)
+    X_train,Y_train = cca.transform(dataX[0].T,dataY[0].T)
+    indVal = 0
+    for indVal in range(n_components):
+        corr[indVal]=np.corrcoef(X_train[:,indVal],Y_train[:,indVal])[0,1]
+    origin_corr = np.max(corr)
+    
+    cca = CCA(n_components)
+    corr = np.zeros(n_components) 
+    print(output[0].shape)
+    cca.fit(output[0],output[1])
+    X_train,Y_train = cca.transform(output[0],output[1])
+    indVal = 0
+    for indVal in range(n_components):
+        corr[indVal]=np.corrcoef(X_train[:,indVal],Y_train[:,indVal])[0,1]
+    now_corr = np.max(corr)
+
+    print(origin_corr)
+    print(now_corr)
     ##########

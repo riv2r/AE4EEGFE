@@ -1,4 +1,5 @@
 # evaluate logistic regression on encoded input
+
 from GetDataMI import GetData
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -6,6 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import load_model
 import numpy as np
+
 # get dataset
 Tz,Ty=GetData(1, 12)
 # 向左向右运动想象

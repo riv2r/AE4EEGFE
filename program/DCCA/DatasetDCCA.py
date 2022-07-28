@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("program/CCA")
+
 import mne
 import torch
 import numpy as np

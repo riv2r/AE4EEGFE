@@ -24,15 +24,15 @@ if __name__ == '__main__':
     input1_size = 6
     input2_size = 8
     # output size
-    output_size = 255
+    output_size = 10
     # layers size
-    numNodes = (output_size+1)*4
+    numNodes = 784
     layer1_size = [input1_size,numNodes,numNodes,numNodes,output_size]
     layer2_size = [input2_size,numNodes,numNodes,numNodes,output_size]
     # training parameters
     learning_rate = 1e-3
-    epoch_num = 500
-    batch_size = 1024
+    epoch_num = 50
+    batch_size = 800
     # the regularization parameter
     # seems necessary to avoid the gradient exploding especially when non-saturating activations are used
     reg_para = 1e-5

@@ -73,10 +73,10 @@ class CCALoss():
         [D2,V2]=torch.symeig(sigmaH22,eigenvectors=True)
         # increase stability
         # gt(a,b) get indexs point to a > b
-        posIdx1 = torch.gt(D1,eps).nonzero()[:,0]
+        posIdx1 = torch.gt(D1,eps).nonzero(as_tuple=False)[:,0]
         D1 = D1[posIdx1]
         V1 = V1[:,posIdx1]
-        posIdx2 = torch.gt(D2,eps).nonzero()[:,0]
+        posIdx2 = torch.gt(D2,eps).nonzero(as_tuple=False)[:,0]
         D2 = D2[posIdx2]
         V2 = V2[:,posIdx2]
         sigmaH11Inv = torch.matmul(

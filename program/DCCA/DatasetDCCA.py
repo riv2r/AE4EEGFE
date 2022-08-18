@@ -15,7 +15,7 @@ class GetDataset():
     def getDataXY(self):
 
         # original data path
-        path = 'dataset/SSVEPEEGData/car.vhdr'
+        path = 'dataset/SSVEP_BCI_DATA_1/1-1.vhdr'
         # origin raw
         raw = mne.io.read_raw_brainvision(path) 
         # 6 channels associated with SSVEP and EOG channel

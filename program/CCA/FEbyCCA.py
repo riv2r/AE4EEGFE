@@ -80,7 +80,7 @@ class FEbyCCA(object):
 if __name__=='__main__':
     
     start = time.time()
-    path = 'dataset/SSVEPEEGData/car2.vhdr'
+    path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
     raw = mne.io.read_raw_brainvision(path)
 
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']

@@ -66,7 +66,7 @@ class GetData():
 if __name__=='__main__':
 
     start = time.time()
-    path = 'dataset/SSVEPEEGData/car.vhdr'
+    path = 'dataset/SSVEP_BCI_DATA_1/1-1.vhdr'
     raw = mne.io.read_raw_brainvision(path)
 
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']

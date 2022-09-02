@@ -61,6 +61,64 @@ class FEbyCCA(object):
             rst[freqIdx]=np.max(corr)
 
         return rst
+    
+    '''
+    # try MSI method
+    def findS(self,EEGDataset,freqSet):
+        X = EEGDataset
+        M = self.numSamplingPoints
+        for freqIdx in range((freqSet.shape)[0]):
+            Y = freqSet[freqIdx,:,:]
+            corrMat11 = 1/M*np.dot(X,X.T)
+            corrMat11[np.isnan(corrMat11)] = 0
+            corrMat12 = 1/M*np.dot(X,Y.T)
+            corrMat12[np.isnan(corrMat12)] = 0
+            corrMat21 = 1/M*np.dot(Y,X.T)
+            corrMat21[np.isnan(corrMat21)] = 0
+            corrMat22 = 1/M*np.dot(Y,Y.T)
+            corrMat22[np.isnan(corrMat22)] = 0
+            corrMat = np.append(
+                np.append(corrMat11,corrMat12,axis=1),
+                np.append(corrMat21,corrMat22,axis=1),
+                axis=0
+                )
+            
+            corrMat11n = np.sqrt(1./corrMat11)
+            corrMat11n[np.isnan(corrMat11n)] = 0
+            corrMat12n = np.sqrt(1./corrMat12)
+            corrMat12n[np.isnan(corrMat12n)] = 0
+            corrMat21n = np.sqrt(1./corrMat21)
+            corrMat21n[np.isnan(corrMat21n)] = 0
+            corrMat22n = np.sqrt(1./corrMat22)
+            corrMat22n[np.isnan(corrMat22n)] = 0
+
+            UMat = np.append(
+                np.append(corrMat11n,np.zeros((corrMat11n.shape[0],corrMat22n.shape[1])),axis=1),
+                np.append(np.zeros((corrMat22n.shape[0],corrMat11n.shape[1])),corrMat22n,axis=1),
+                axis=0
+                )
+
+            RMat11 = np.identity(6)
+            RMat12 = np.dot(np.dot(corrMat11n,corrMat12),corrMat22n)
+            RMat21 = np.dot(np.dot(corrMat22n,corrMat21),corrMat11n)
+            RMat22 = np.identity(8)
+            
+            RMat = np.append(
+                np.append(RMat11,RMat12,axis=1),
+                np.append(RMat21,RMat22,axis=1),
+                axis=0
+            )
+
+            phi = np.linalg.eig(RMat)[0] 
+            phiBar = phi/np.trace(RMat)
+
+            temp = 0
+            for i in range(0,14):
+                temp = phiBar[i]*np.log(phiBar[i])
+            
+            SParam = 1 + temp/np.log(14)
+            print(SParam)
+        '''
 
     def process(self,EEGDataset):
 
@@ -70,6 +128,7 @@ class FEbyCCA(object):
             freqSet.append(freqTemp)
         freqSet=np.array(freqSet)
         n_components=1
+        # self.findS(EEGDataset,freqSet)
         rst=self.findCorr(n_components,EEGDataset,freqSet)
         rstMax=max(rst,key=float)
         predClass=np.argmax(rst)+1

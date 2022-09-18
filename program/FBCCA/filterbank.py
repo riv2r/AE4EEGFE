@@ -1,21 +1,19 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov  1 10:16:21 2019
-
-@author: ALU
-"""
 import warnings
 import scipy.signal
 import numpy as np
+import mne
+import sys
+sys.path.append("program/CCA")
+from GetDataSSVEP import GetData
 
 def filterbank(eeg, fs, idx_fb):    
-    if idx_fb == None:
+    if (idx_fb == None):
         warnings.warn('stats:filterbank:MissingInput '\
-                      +'Missing filter index. Default value (idx_fb = 0) will be used.')
+                     +'Missing filter index. Default value (idx_fb = 0) will be used.')
         idx_fb = 0
-    elif (idx_fb < 0 or 9 < idx_fb):
+    elif (idx_fb < 0 or 16 < idx_fb):
         raise ValueError('stats:filterbank:InvalidInput '\
-                          +'The number of sub-bands must be 0 <= idx_fb <= 9.')
+                        +'The number of sub-bands must be 0 <= idx_fb <= 16.')
             
     if (len(eeg.shape)==2):
         num_chans = eeg.shape[0]
@@ -26,8 +24,12 @@ def filterbank(eeg, fs, idx_fb):
     # Nyquist Frequency = Fs/2N
     Nq = fs/2
     
+    '''
     passband = [6, 14, 22, 30, 38, 46, 54, 62, 70, 78]
     stopband = [4, 10, 16, 24, 32, 40, 48, 56, 64, 72]
+    '''
+    passband = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
+    stopband = [4, 9 , 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84]
     Wp = [passband[idx_fb]/Nq, 90/Nq]
     Ws = [stopband[idx_fb]/Nq, 100/Nq]
     [N, Wn] = scipy.signal.cheb1ord(Wp, Ws, 3, 40) # band pass filter StopBand=[Ws(1)~Ws(2)] PassBand=[Wp(1)~Wp(2)]
@@ -49,6 +51,7 @@ def filterbank(eeg, fs, idx_fb):
         
         
 if __name__ == '__main__':
+    '''
     from scipy.io import loadmat
     
     D = loadmat("sample.mat")
@@ -68,4 +71,33 @@ if __name__ == '__main__':
     
     print("Difference between matlab and python = ", np.sum(dif1))
     print("Difference between matlab and python = ", np.sum(dif2))
-    
+    '''
+
+ 
+    path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
+    raw = mne.io.read_raw_brainvision(path)
+    # use bellow codes to find st_time 
+    # raw.plot()
+    # plt.show()
+
+    picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
+    raw.pick_channels(picks)
+
+    # By observation
+    # SSVEP_BCI_DATA_1: 12 9.5 9
+    # SSVEP_BCI_DATA_2: 10 12 14
+    #                   11 11 9
+    #                   20 16 6
+    last_time = 125
+    st_time = 9
+    ed_time = st_time+last_time
+    raw = raw.crop(st_time,ed_time)
+
+    dataset=GetData()    
+
+    raw=dataset.preProcessing(raw)
+    raw=dataset.repairEOGByICA(raw)
+    data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
+
+    y = filterbank(data[0],250,16)
+    print(y)

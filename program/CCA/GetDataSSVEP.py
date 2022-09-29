@@ -55,7 +55,9 @@ class GetData():
         # adjust duration to fit
         epochs = mne.make_fixed_length_epochs(raw, duration=5)
         data = epochs.get_data()
+        data = data[:,:,0:1000]
         t = epochs.times
+        t = t[0:1000]
         numGroups = data.shape[0]
         numChans = data.shape[1]
         numSamplingPoints = data.shape[2]

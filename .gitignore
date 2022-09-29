@@ -8,4 +8,4 @@ paper/
 program/*/__pycache__/
 
 # 忽略.m程序运行缓存文件
-program/*.asv
+program/*/*.asv

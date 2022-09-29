@@ -8,6 +8,12 @@ sca;
 clc;
 clear;
 close all;
+
+%% InitSerial
+delete(instrfindall);
+s=serial('COM8','BaudRate',115200);
+fopen(s);
+
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
 % [#]   [ms]    [Hz]    [-]
@@ -27,15 +33,15 @@ twelve=         [0 0 1 1 1];
 ten=            [0 0 0 1 1 1];
 eight_fiveseven=[0 0 0 1 1 1 1];
 seven_five=     [0 0 0 0 1 1 1 1];
-six_six=        [0 0 0 0 1 1 1 1 1];
+% six_six=        [0 0 0 0 1 1 1 1 1];
 
 % initiate freq table
-freq{1} = six_six;
-freq{2} = seven_five;
-freq{3} = eight_fiveseven;
-freq{4} = ten;
-freq{5} = twelve;
-lenFreq=[length(freq{1}),length(freq{2}),length(freq{3}),length(freq{4}),length(freq{5})];
+% freq{1} = six_six;
+freq{1} = seven_five;
+freq{2} = eight_fiveseven;
+freq{3} = ten;
+freq{4} = twelve;
+lenFreq=[length(freq{1}),length(freq{2}),length(freq{3}),length(freq{4})];
 
 %% Generate display matrixes for movies
 % Find LCM(least common multiple ) of freq matrix to create equal matrixes for all freqs
@@ -44,7 +50,7 @@ for i=1:length(lenFreq)
     lcmFreq=lcm(lcmFreq,lenFreq(i));
 end
 % Generate full movie matrix of frequency
-for i=1:5
+for i=1:4
     freqCombine(i,:) = repmat(freq{i},1,lcmFreq/length(freq{i})); 
 end
 % revert value
@@ -54,14 +60,14 @@ try
     screenNumber = max(screens);
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 640 480]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
     targetHeight=100;
     % draw texture to screen
     screenMatrix=GetParadigm(width, height, targetWidth, targetHeight);
-    for i=1:32
+    for i=1:16
         texture(i)=Screen('MakeTexture',win,uint8(screenMatrix{i})*255);
     end
     textureWhite=Screen('MakeTexture',win,uint8(ones(size(screenMatrix{1})))*255);
@@ -83,7 +89,7 @@ try
     % Record Times
     i=0;
 
-    while ~KbCheck && etime(t2,t1)<125
+    while ~KbCheck % && etime(t2,t1)<125
         % Before collect 0.5s
         % black
         Screen('DrawTexture',win,textureBlack);
@@ -92,11 +98,14 @@ try
         WaitSecs(0.5);
         tic;
         toc;
+        % send trigger: 0x01 0xE1 0x01 0x00 0x01
+        % last 0x01 is trigger value determined by user
+        fwrite(s,[1 225 1 0 1]);
         while toc<4
             % Drawing
             % Compute texture value based on display value from freq long matrixes
-            textureValue=freqCombine(:,indexflip).*[1;2;4;8;16];
-            textureValue=textureValue(5)+textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
+            textureValue=freqCombine(:,indexflip).*[1;2;4;8];
+            textureValue=textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
             % Draw it on the back buffer
             Screen('DrawTexture',win,texture(textureValue));
             % Display current index
@@ -116,9 +125,12 @@ try
             end
             toc;
         end
+        % send trigger: 0x01 0xE1 0x01 0x00 0x01
+        % last 0x01 is trigger value determined by user
+        fwrite(s,[1 225 1 0 1]);
         % After collect 0.5s
-        % white
-        Screen('DrawTexture',win,textureWhite);
+        % black
+        Screen('DrawTexture',win,textureBlack);
         Screen('DrawingFinished',win);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(0.5);
@@ -127,6 +139,7 @@ try
         % Add Times
         i=i+1;
     end
+    fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');

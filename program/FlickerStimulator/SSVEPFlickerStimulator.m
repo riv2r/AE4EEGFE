@@ -9,10 +9,12 @@ clc;
 clear;
 close all;
 
-%% InitSerial
+%% Initiate serial
+%{
 delete(instrfindall);
 s=serial('COM8','BaudRate',115200);
 fopen(s);
+%}
 
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
@@ -98,9 +100,10 @@ try
         WaitSecs(0.5);
         tic;
         toc;
-        % send trigger: 0x01 0xE1 0x01 0x00 0x01
-        % last 0x01 is trigger value determined by user
-        fwrite(s,[1 225 1 0 1]);
+        %{
+        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
+        fwrite(s,[1 225 1 0 255]);
+        %}
         while toc<4
             % Drawing
             % Compute texture value based on display value from freq long matrixes
@@ -125,9 +128,8 @@ try
             end
             toc;
         end
-        % send trigger: 0x01 0xE1 0x01 0x00 0x01
-        % last 0x01 is trigger value determined by user
-        fwrite(s,[1 225 1 0 1]);
+        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
+        % fwrite(s,[1 225 1 0 1]);
         % After collect 0.5s
         % black
         Screen('DrawTexture',win,textureBlack);
@@ -139,7 +141,7 @@ try
         % Add Times
         i=i+1;
     end
-    fclose(s);
+    % fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');

@@ -1,6 +1,6 @@
 function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
     
-    %% Generate Matrix for 4 Targets (Top, Right, Down, Left)
+    %% Generate Matrix for 4 Targets (Top, Left, Right, Down)
     for i=1:5
         targetMatrix{i}=zeros(winHeight,winWidth,'uint8');
     end
@@ -18,10 +18,12 @@ function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
             elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j<=targetWidth
                 targetMatrix{2}(i,j)=1;
                 % disp('got it');
-%             % Target3:Stop
-%             elseif j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2
-%                 targetMatrix{3}(i,j)=1;
-%                 % disp('got it');
+            %{
+            % Target3:Stop
+            elseif j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2
+                targetMatrix{3}(i,j)=1;
+                % disp('got it');
+            %}
             % Target3:Right
             elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j>winWidth-targetWidth
                 targetMatrix{3}(i,j)=1;
@@ -38,16 +40,16 @@ function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
         for targetState2=1:2
             for targetState3=1:2
                 for targetState4=1:2
-%                     for targetState5=1:2
-%                         textureNumber=(targetState5-1)*16+(targetState4-1)*8+(targetState3-1)*4+(targetState2-1)*2+(targetState1-1)*1+1;
-                        textureNumber=(targetState4-1)*8+(targetState3-1)*4+(targetState2-1)*2+(targetState1-1)*1+1;
-                        screenMatrix{textureNumber}=targetMatrix{5} |...
-                                                    targetMatrix{1}*uint8(targetState1-1) |...
-                                                    targetMatrix{2}*uint8(targetState2-1) |...
-                                                    targetMatrix{3}*uint8(targetState3-1) |...
-                                                    targetMatrix{4}*uint8(targetState4-1);
-%                                                     targetMatrix{5}*uint8(targetState5-1);
-%                     end
+                    % for targetState5=1:2
+                        % textureNumber=(targetState5-1)*16+(targetState4-1)*8+(targetState3-1)*4+(targetState2-1)*2+(targetState1-1)*1+1;
+                    textureNumber=(targetState4-1)*8+(targetState3-1)*4+(targetState2-1)*2+(targetState1-1)*1+1;
+                    screenMatrix{textureNumber}=targetMatrix{5} |...
+                                                targetMatrix{1}*uint8(targetState1-1) |...
+                                                targetMatrix{2}*uint8(targetState2-1) |...
+                                                targetMatrix{3}*uint8(targetState3-1) |...
+                                                targetMatrix{4}*uint8(targetState4-1);
+                                                % targetMatrix{5}*uint8(targetState5-1);
+                    % end
                 end
             end
         end

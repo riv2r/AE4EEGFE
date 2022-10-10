@@ -2,16 +2,21 @@ clc;
 clear;
 close all;
 
-% remote host IP and Port
+% host IP and Port
+% local host IP 'localhost'
+% remote host IP XXX.X.X.X
+% local Port 8888
+% EEG Device Port 8712
 ipAddress = 'localhost';
-serverPort = 8712;
-% number of channel 
+Port = 8888;
+% number of channels
+% SSVEP-8 + 1 Trigger
 nChan = 9;
 % sampling rate
-sampleRate = 250;
-% buffer size in seconds
+sampleRate = 2400;
+% buffer size (in seconds)
 bufferSize = 4;
-% update interval in ms
+% update interval (in ms)
 updateInterval = 0.04;% 40 ms
 
 % calculate update points
@@ -21,35 +26,31 @@ else
     updatePoints = sampleRate;
 end
 
-dataClient = tcpip(ipAddress,serverPort,'NetworkRole','client');
+dataClient = tcpclient(ipAddress,Port);
 
 % dataClient properties initialize
-dataClient.BytesAvailableFcnCount = 4*nChan*updatePoints;
-dataClient.BytesAvailableFcnMode = 'byte';
-dataClient.InputBufferSize = dataClient.BytesAvailableFcnCount*10;
+dataClient.InputBufferSize = 4*nChan*updatePoints*10;
 
-dataCell=[];
+rst=[];
+% turn on client
 fopen(dataClient);
 
-i=0;
 while ~KbCheck
-    rawData = fread(dataClient, dataClient.BytesAvailableFcnCount/4, 'float');
-    data = reshape(rawData,[nChan,length(rawData)/nChan]);
-    dataCell = [dataCell data];
-    dataCellLength = size(dataCell,2);
-    if dataCellLength >= bufferSize*sampleRate
-        dataCell = dataCell(:,(end-bufferSize*sampleRate+1):end);
+    rawData = fread(dataClient, nChan*updatePoints, 'float');
+    data = reshape(rawData,[nChan,updatePoints]);
+    rst = [rst data];
+    rstLength = size(rst,2);
+    if rstLength >= bufferSize*sampleRate
+        rst = rst(:,(end-bufferSize*sampleRate+1):end);
     end
     
     for i = 1:nChan
         subplot(nChan,1,i);
-        plot(dataCell(i,:)');
+        plot(rst(i,:)');
     end
     
-    % plot(dataCell(9,:)');
     linkdata on;
-    pause(updateInterval);
-    i=i+1;
+    pause(0.01);
 end
 
 fclose(dataClient);	

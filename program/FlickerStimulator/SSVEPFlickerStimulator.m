@@ -16,6 +16,33 @@ s=serial('COM8','BaudRate',115200);
 fopen(s);
 %}
 
+%% Initiate TCP/IP
+%{
+% host IP and Port
+ipAddress = 'localhost';
+Port = 8888;
+% number of channels: SSVEP-8 + 1 Trigger
+nChan = 9;
+% sampling rate
+sampleRate = 2400;
+% buffer size (in seconds)
+bufferSize = 4;
+% update interval (in ms)
+updateInterval = 0.04;% 40 ms
+
+% calculate update points
+if round(sampleRate * updateInterval) > 1
+    updatePoints = round(sampleRate * updateInterval);
+else
+    updatePoints = sampleRate;
+end
+
+dataClient = tcpclient(ipAddress,Port);
+
+% dataClient properties initialize
+dataClient.InputBufferSize = 4*nChan*updatePoints*10;
+%}
+
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
 % [#]   [ms]    [Hz]    [-]
@@ -57,6 +84,7 @@ for i=1:4
 end
 % revert value
 freqCombine=1-freqCombine;
+
 try
     screens=Screen('Screens');
     screenNumber = max(screens);
@@ -84,27 +112,31 @@ try
     vb1=Screen('Flip',win);
     waitframes = 1;
 
-    % Record Start Time
-    t1=clock;
-    t2=clock;
-
-    % Record Times
-    i=0;
-
-    while ~KbCheck % && etime(t2,t1)<125
-        % Before collect 0.5s
+    % while ~KbCheck % && etime(t2,t1)<125
+        
+        rst=[];
+        % turn on client
+        fopen(dataClient);
+        %}
+        % Before collect 1s
         % black
+        %{
         Screen('DrawTexture',win,textureBlack);
         Screen('DrawingFinished',win);
+        %}
+        Screen('TextSize',win,50);
+        Screen('TextFont',win,'Times');
+        DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        WaitSecs(0.5);
-        tic;
-        toc;
+        WaitSecs(1);
+
         %{
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
         fwrite(s,[1 225 1 0 255]);
         %}
-        while toc<4
+        
+        tic;
+        while toc<=4
             % Drawing
             % Compute texture value based on display value from freq long matrixes
             textureValue=freqCombine(:,indexflip).*[1;2;4;8];
@@ -126,21 +158,36 @@ try
                 indexflip=1;
                 % disp('over');
             end
-            toc;
         end
+        while true
+            rawData = fread(dataClient, nChan*updatePoints, 'float');
+            data = reshape(rawData,[nChan,updatePoints]);
+            rst = [rst data];
+            rstLength = size(rst,2);
+            if rstLength >= bufferSize*sampleRate
+                break
+                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
+            end
+        end
+        %{
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
-        % fwrite(s,[1 225 1 0 1]);
-        % After collect 0.5s
+        fwrite(s,[1 225 1 0 1]);
+        %}
+        
+        % After collect 1s
         % black
+        %{
         Screen('DrawTexture',win,textureBlack);
         Screen('DrawingFinished',win);
+        %}
+        Screen('TextSize',win,50);
+        Screen('TextFont',win,'Times');
+        DrawFormattedText(win,'End','center','center',[0 0 0]);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        WaitSecs(0.5);
-        % Record End Time
-        t2=clock;
-        % Add Times
-        i=i+1;
-    end
+        WaitSecs(1);
+        fclose(dataClient);
+
+    % end
     % fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);

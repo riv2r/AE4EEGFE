@@ -73,6 +73,7 @@ Output:
   y_ref           : Generated reference signals
                    (# of targets, 2*# of channels, Data length [sample])
 '''      
+
 def cca_reference(list_freqs, fs, num_smpls, num_harms=3):
     
     num_freqs = len(list_freqs)
@@ -90,10 +91,10 @@ def cca_reference(list_freqs, fs, num_smpls, num_harms=3):
     
     return y_ref
 
-
 '''
 Base on fbcca, but adapt to our input format
 '''   
+
 def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
     
     fb_coefs = np.power(np.arange(1,num_fbs+1),(-1.25)) + 0.25
@@ -161,7 +162,7 @@ if __name__=="__main__":
     numSmpls = numSamplingPoints
 
     score = 0
-
+    
     for i in range(numGroups):
         dataTemp = data[i]
         predClass = fbcca(dataTemp, listFreqs, FS)

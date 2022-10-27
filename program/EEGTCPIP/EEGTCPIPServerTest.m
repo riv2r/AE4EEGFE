@@ -6,7 +6,6 @@ ipAddress = 'localhost';
 Port = 8888;
 nChan = 9;
 sampleRate = 1000;
-bufferSize = 4;
 updateInterval = 0.04;
 
 % calculate update points
@@ -21,22 +20,21 @@ dataServer.OutputBufferSize = 4*nChan*updatePoints*10;
 
 x=0;
 rst = [];
-diffx = [];
 
 fopen(dataServer);
 
 tic;
-while ~KbCheck
+while true
     if length(rst)>=nChan*updatePoints
+        rst
         fwrite(dataServer,rst,'float');
         rst = [];
     end
     for i=0:7
-        rst=[rst sin(x+i*pi/2)];
+        rst=[rst sin(0.002*pi*x+i*pi/2)];
     end
     if toc>=1
-        rst = [rst x];
-        diffx = [diffx x];
+        rst = [rst 1];
         tic;
     else
         rst = [rst 0];

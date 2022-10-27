@@ -41,9 +41,10 @@ while ~KbCheck
     rst = [rst data];
     rstLength = size(rst,2);
     if rstLength >= bufferSize*sampleRate
-        rst = rst(:,(end-bufferSize*sampleRate+1):end);
+        break
+        % rst = rst(:,(end-bufferSize*sampleRate+1):end);
     end
-    
+    %{
     for i = 1:nChan
         subplot(nChan,1,i);
         plot(rst(i,:)');
@@ -51,6 +52,7 @@ while ~KbCheck
     
     linkdata on;
     pause(0.01);
+    %}
 end
 
 fclose(dataClient);	

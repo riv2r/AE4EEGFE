@@ -1,7 +1,6 @@
 %% Initiate Psychtoolbox
 % when open MATLAB R2022a firstly
 % execute the following code: InitPsychtoolbox
-% InitPsychtoolbox;
 
 %% Start
 sca;
@@ -17,7 +16,7 @@ fopen(s);
 %}
 
 %% Initiate TCP/IP
-%{
+
 % host IP and Port
 ipAddress = 'localhost';
 Port = 8888;
@@ -26,7 +25,7 @@ nChan = 9;
 % sampling rate
 sampleRate = 2400;
 % buffer size (in seconds)
-bufferSize = 4;
+bufferSize = 5;
 % update interval (in ms)
 updateInterval = 0.04;% 40 ms
 
@@ -41,7 +40,7 @@ dataClient = tcpclient(ipAddress,Port);
 
 % dataClient properties initialize
 dataClient.InputBufferSize = 4*nChan*updatePoints*10;
-%}
+
 
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
@@ -62,10 +61,8 @@ twelve=         [0 0 1 1 1];
 ten=            [0 0 0 1 1 1];
 eight_fiveseven=[0 0 0 1 1 1 1];
 seven_five=     [0 0 0 0 1 1 1 1];
-% six_six=        [0 0 0 0 1 1 1 1 1];
 
 % initiate freq table
-% freq{1} = six_six;
 freq{1} = seven_five;
 freq{2} = eight_fiveseven;
 freq{3} = ten;
@@ -90,7 +87,7 @@ try
     screenNumber = max(screens);
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 640 480]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[640 300 1280 780]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -112,19 +109,16 @@ try
     vb1=Screen('Flip',win);
     waitframes = 1;
 
-    % while ~KbCheck % && etime(t2,t1)<125
+    % while ~KbCheck
+        
         
         rst=[];
         % turn on client
         fopen(dataClient);
-        %}
+        
+
         % Before collect 1s
-        % black
-        %{
-        Screen('DrawTexture',win,textureBlack);
-        Screen('DrawingFinished',win);
-        %}
-        Screen('TextSize',win,50);
+        Screen('TextSize',win,100);
         Screen('TextFont',win,'Times');
         DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
@@ -134,7 +128,7 @@ try
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
         fwrite(s,[1 225 1 0 255]);
         %}
-        
+
         tic;
         while toc<=4
             % Drawing
@@ -159,34 +153,36 @@ try
                 % disp('over');
             end
         end
+
+        %{
+        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
+        fwrite(s,[1 225 1 0 1]);
+        %}
+
+        % After collect 1s
+        Screen('TextSize',win,100);
+        Screen('TextFont',win,'Times');
+        DrawFormattedText(win,'End','center','center',[0 0 0]);
+        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+        WaitSecs(1);
+
+        
         while true
             rawData = fread(dataClient, nChan*updatePoints, 'float');
             data = reshape(rawData,[nChan,updatePoints]);
             rst = [rst data];
             rstLength = size(rst,2);
             if rstLength >= bufferSize*sampleRate
+                save('data.mat','rst');
                 break
                 % rst = rst(:,(end-bufferSize*sampleRate+1):end);
             end
         end
-        %{
-        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
-        fwrite(s,[1 225 1 0 1]);
-        %}
         
-        % After collect 1s
-        % black
-        %{
-        Screen('DrawTexture',win,textureBlack);
-        Screen('DrawingFinished',win);
-        %}
-        Screen('TextSize',win,50);
-        Screen('TextFont',win,'Times');
-        DrawFormattedText(win,'End','center','center',[0 0 0]);
-        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        WaitSecs(1);
+        
+        
         fclose(dataClient);
-
+        
     % end
     % fclose(s);
     Priority(0); 

@@ -7,6 +7,7 @@ from filterbank import filterbank
 from scipy.stats import pearsonr
 import numpy as np
 import time
+import scipy.io as scio
 
 '''
 Steady-state visual evoked potentials (SSVEPs) detection using the filter
@@ -151,6 +152,36 @@ if __name__=="__main__":
     ed_time = st_time+last_time
     raw = raw.crop(st_time,ed_time)
 
+    # save usable .mat file
+    raw = raw.crop(20,25)
+    data = raw.get_data()[:,:5000]
+    data_in_mat = 'dataset/data_in_mat.mat'
+    scio.savemat(data_in_mat,{'data':data})
+
+    data = scio.loadmat('dataset/data_in_mat.mat')['data']
+    ch_names = picks
+    sfreq = 1000
+    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
+    raw = mne.io.RawArray(data,info)
+    print(raw)
+
+    dataset=GetData()    
+
+    raw=dataset.preProcessing(raw)
+    raw=dataset.repairEOGByICA(raw)
+
+    data = raw.get_data()
+    listFreqs = [6.67, 7.5, 8.57, 10, 12]
+    FS = raw.info['sfreq']
+    numSmpls = data.shape[1]
+    print(FS)
+    print(numSmpls)
+
+    predClass = fbcca(data, listFreqs, FS)
+    print(predClass)
+    '''
+
     dataset=GetData()    
 
     raw=dataset.preProcessing(raw)
@@ -172,3 +203,4 @@ if __name__=="__main__":
     print('识别率为：',rate,'%')
     end = time.time()
     print('程序执行时间为：',end-start,'s')
+    '''

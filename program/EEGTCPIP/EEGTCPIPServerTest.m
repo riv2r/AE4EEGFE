@@ -15,7 +15,7 @@ else
     updatePoints = sampleRate;
 end
 
-dataServer = tcpserver(ipAddress,Port);
+dataServer = tcpip(ipAddress,Port,'NetworkRole','server');
 dataServer.OutputBufferSize = 4*nChan*updatePoints*10;
 
 x=0;
@@ -31,7 +31,7 @@ while true
         rst = [];
     end
     for i=0:7
-        rst=[rst sin(0.002*pi*x+i*pi/2)];
+        rst=[rst sin(10*2*pi*x+i*pi/2)];
     end
     if toc>=1
         rst = [rst 1];

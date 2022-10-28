@@ -31,7 +31,7 @@ Output:
 def fbcca(eeg, list_freqs, fs, num_harms=3, num_fbs=16):
     
     fb_coefs = np.power(np.arange(1,num_fbs+1),(-1.25)) + 0.25
-    num_targs = 5
+    num_targs = 4
     num_chans, num_smpls = eeg.shape
     y_ref = cca_reference(list_freqs, fs, num_smpls, num_harms)
     cca = CCA(n_components=1) #initilize CCA
@@ -131,16 +131,40 @@ def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
 
 
 if __name__=="__main__":
-    
+    data_in_mat = '/home/user/Desktop/ControlByBCI/dataset/data.mat'
+
+    data = scio.loadmat(data_in_mat)['rst'][:8]
+    print(data.shape)
+
+    ch_names = ['POz','Oz','PO3','PO4','PO5','PO6','O1','O2']
+    sfreq = 2400
+    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
+    raw = mne.io.RawArray(data,info)
+
+    dataset=GetData()    
+
+    raw=dataset.preProcessing(raw)
+    # raw=dataset.repairEOGByICA(raw)
+
+    data = raw.get_data()
+    listFreqs = [7.5, 8.57, 10, 12]
+    FS = raw.info['sfreq']
+    numSmpls = data.shape[1]
+
+    predClass = fbcca(data, listFreqs, FS)
+    print(predClass)
+
+    '''
     start = time.time()
     path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
-    raw = mne.io.read_raw_brainvision(path)
+    raw_origin = mne.io.read_raw_brainvision(path)
     # use bellow codes to find st_time 
     # raw.plot()
     # plt.show()
 
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
-    raw.pick_channels(picks)
+    raw_origin.pick_channels(picks)
 
     # By observation
     # SSVEP_BCI_DATA_1: 12 9.5 9
@@ -150,36 +174,43 @@ if __name__=="__main__":
     last_time = 125
     st_time = 9
     ed_time = st_time+last_time
-    raw = raw.crop(st_time,ed_time)
+    raw_origin = raw_origin.crop(st_time,ed_time)
 
-    # save usable .mat file
-    raw = raw.crop(20,25)
-    data = raw.get_data()[:,:5000]
-    data_in_mat = 'dataset/data_in_mat.mat'
-    scio.savemat(data_in_mat,{'data':data})
+    rst = []
 
-    data = scio.loadmat('dataset/data_in_mat.mat')['data']
-    ch_names = picks
-    sfreq = 1000
-    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
-    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
-    raw = mne.io.RawArray(data,info)
-    print(raw)
+    for i in range(0,125,5):
+        # save usable .mat file
+        if not i%25:
+            continue
+        else:
+            raw = raw_origin.copy().crop(i,i+5)
+            data = raw.get_data()[:,:5000]
+            data_in_mat = 'dataset/data_in_mat.mat'
+            scio.savemat(data_in_mat,{'data':data})
 
-    dataset=GetData()    
+            data = scio.loadmat('dataset/data_in_mat.mat')['data']
+            ch_names = picks
+            sfreq = 1000
+            ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+            info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
+            raw = mne.io.RawArray(data,info)
 
-    raw=dataset.preProcessing(raw)
-    raw=dataset.repairEOGByICA(raw)
+            dataset=GetData()    
 
-    data = raw.get_data()
-    listFreqs = [6.67, 7.5, 8.57, 10, 12]
-    FS = raw.info['sfreq']
-    numSmpls = data.shape[1]
-    print(FS)
-    print(numSmpls)
+            raw=dataset.preProcessing(raw)
+            raw=dataset.repairEOGByICA(raw)
 
-    predClass = fbcca(data, listFreqs, FS)
-    print(predClass)
+            data = raw.get_data()
+            listFreqs = [7.5, 8.57, 10, 12]
+            FS = raw.info['sfreq']
+            numSmpls = data.shape[1]
+
+            predClass = fbcca(data, listFreqs, FS)
+            rst.append(predClass)
+    
+    for c in rst:
+        print(c)
+    '''
     '''
 
     dataset=GetData()    

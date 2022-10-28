@@ -58,13 +58,13 @@ if __name__=='__main__':
 
     # start = time.time()
     path = 'dataset/SSVEP_BCI_DATA_1/1-1.vhdr'
-    raw = mne.io.read_raw_brainvision(path)
+    raw_origin = mne.io.read_raw_brainvision(path)
     # use bellow codes to find st_time 
     # raw.plot()
     # plt.show()
 
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
-    raw.pick_channels(picks)
+    raw_origin.pick_channels(picks)
 
     # By observation
     # SSVEP_BCI_DATA_1: 12 9.5 9
@@ -74,7 +74,7 @@ if __name__=='__main__':
     last_time = 125
     st_time = 12
     ed_time = st_time+last_time
-    raw = raw.crop(st_time,ed_time)
+    raw = raw_origin.copy().crop(st_time, ed_time)
 
     dataset=GetData() 
 

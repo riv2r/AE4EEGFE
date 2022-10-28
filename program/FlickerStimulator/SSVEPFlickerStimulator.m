@@ -25,7 +25,7 @@ nChan = 9;
 % sampling rate
 sampleRate = 2400;
 % buffer size (in seconds)
-bufferSize = 5;
+bufferSize = 4;
 % update interval (in ms)
 updateInterval = 0.04;% 40 ms
 
@@ -36,7 +36,7 @@ else
     updatePoints = sampleRate;
 end
 
-dataClient = tcpclient(ipAddress,Port);
+dataClient = tcpip(ipAddress,Port,'NetworkRole','client');
 
 % dataClient properties initialize
 dataClient.InputBufferSize = 4*nChan*updatePoints*10;
@@ -87,7 +87,7 @@ try
     screenNumber = max(screens);
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[640 300 1280 780]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -111,12 +111,6 @@ try
 
     % while ~KbCheck
         
-        
-        rst=[];
-        % turn on client
-        fopen(dataClient);
-        
-
         % Before collect 1s
         Screen('TextSize',win,100);
         Screen('TextFont',win,'Times');
@@ -129,6 +123,10 @@ try
         fwrite(s,[1 225 1 0 255]);
         %}
 
+        rst=[];
+        % turn on client
+        fopen(dataClient);
+        
         tic;
         while toc<=4
             % Drawing
@@ -153,6 +151,20 @@ try
                 % disp('over');
             end
         end
+        
+        while true
+            rawData = fread(dataClient, nChan*updatePoints, 'float');
+            data = reshape(rawData,[nChan,updatePoints]);
+            rst = [rst data];
+            rstLength = size(rst,2);
+            if rstLength >= bufferSize*sampleRate
+                save('/home/user/Desktop/ControlByBCI/dataset/data.mat','rst');
+                break
+                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
+            end
+        end
+        
+        fclose(dataClient);
 
         %{
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
@@ -166,29 +178,13 @@ try
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(1);
 
-        
-        while true
-            rawData = fread(dataClient, nChan*updatePoints, 'float');
-            data = reshape(rawData,[nChan,updatePoints]);
-            rst = [rst data];
-            rstLength = size(rst,2);
-            if rstLength >= bufferSize*sampleRate
-                save('data.mat','rst');
-                break
-                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
-            end
-        end
-        
-        
-        
-        fclose(dataClient);
-        
     % end
     % fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
+    system("python /home/user/Desktop/ControlByBCI/program/FBCCA/FEbyFBCCA.py");
 catch
     Screen('CloseAll');
     Screen('Close');

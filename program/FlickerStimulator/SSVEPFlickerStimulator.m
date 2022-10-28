@@ -9,38 +9,36 @@ clear;
 close all;
 
 %% Initiate serial
-
 delete(instrfindall);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% modify Port name 'COM8'
 s=serial('COM8','BaudRate',115200);
 fopen(s);
 
-
 %% Initiate TCP/IP
-
 % host IP and Port
 ipAddress = 'localhost';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% modify Port
 Port = 8712;
 % number of channels: SSVEP-8 + 1 Trigger
 nChan = 9;
 % sampling rate
 sampleRate = 1000;
-% buffer size (in seconds)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% modify buffer size (in seconds) 1 + 4 + 1
 bufferSize = 6;
 % update interval (in ms)
 updateInterval = 0.04;% 40 ms
-
 % calculate update points
 if round(sampleRate * updateInterval) > 1
     updatePoints = round(sampleRate * updateInterval);
 else
     updatePoints = sampleRate;
 end
-
-dataClient = tcpip(ipAddress,Port,'NetworkRole','client');
-
+dataClient = tcpclient(ipAddress,Port);
 % dataClient properties initialize
 dataClient.InputBufferSize = 4*nChan*updatePoints*10;
-
 
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
@@ -52,16 +50,13 @@ dataClient.InputBufferSize = 4*nChan*updatePoints*10;
 % 7.0   116.67  8.57    [0 0 0 1 1 1 1]
 % 8.0   133.33  7.50    [0 0 0 0 1 1 1 1]
 % 9.0   150.00  6.66    [0 0 0 0 1 1 1 1 1]
-
 PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
-
 % According to the paper 1 is black, 0 is white
 twelve=         [0 0 1 1 1];
 ten=            [0 0 0 1 1 1];
 eight_fiveseven=[0 0 0 1 1 1 1];
 seven_five=     [0 0 0 0 1 1 1 1];
-
 % initiate freq table
 freq{1} = seven_five;
 freq{2} = eight_fiveseven;
@@ -85,6 +80,7 @@ freqCombine=1-freqCombine;
 try
     screens=Screen('Screens');
     screenNumber = max(screens);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
     [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[640 300 1280 780]);
@@ -180,7 +176,9 @@ try
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
+
     system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
+    
 catch
     Screen('CloseAll');
     Screen('Close');

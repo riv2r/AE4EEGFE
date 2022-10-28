@@ -1,6 +1,4 @@
 import mne
-import sys
-sys.path.append('program/CCA')
 from GetDataSSVEP import GetData
 import numpy as np
 import matplotlib.pyplot as plt

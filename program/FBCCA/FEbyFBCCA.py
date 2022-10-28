@@ -129,13 +129,13 @@ def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
 
 
 if __name__=="__main__":
-    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
 
-    ch_names = ['POz','Oz','PO3','PO4','PO5','PO6','O1','O2']
+    ch_names = ['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
     sfreq = 1000
     ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
     info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
 
+    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
     data = scio.loadmat(data_in_mat)['rst'][:9]
     idx = np.nonzero(data)[1][-2]
     data = data[:8,idx:idx+4*sfreq]

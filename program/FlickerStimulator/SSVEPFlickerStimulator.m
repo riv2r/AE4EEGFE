@@ -9,23 +9,23 @@ clear;
 close all;
 
 %% Initiate serial
-%{
+
 delete(instrfindall);
 s=serial('COM8','BaudRate',115200);
 fopen(s);
-%}
+
 
 %% Initiate TCP/IP
 
 % host IP and Port
 ipAddress = 'localhost';
-Port = 8888;
+Port = 8712;
 % number of channels: SSVEP-8 + 1 Trigger
 nChan = 9;
 % sampling rate
-sampleRate = 2400;
+sampleRate = 1000;
 % buffer size (in seconds)
-bufferSize = 4;
+bufferSize = 6;
 % update interval (in ms)
 updateInterval = 0.04;% 40 ms
 
@@ -87,7 +87,7 @@ try
     screenNumber = max(screens);
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[640 300 1280 780]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -110,7 +110,11 @@ try
     waitframes = 1;
 
     % while ~KbCheck
-        
+
+        rst=[];
+        % turn on client
+        fopen(dataClient);
+
         % Before collect 1s
         Screen('TextSize',win,100);
         Screen('TextFont',win,'Times');
@@ -118,15 +122,9 @@ try
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(1);
 
-        %{
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
         fwrite(s,[1 225 1 0 255]);
-        %}
 
-        rst=[];
-        % turn on client
-        fopen(dataClient);
-        
         tic;
         while toc<=4
             % Drawing
@@ -152,24 +150,8 @@ try
             end
         end
         
-        while true
-            rawData = fread(dataClient, nChan*updatePoints, 'float');
-            data = reshape(rawData,[nChan,updatePoints]);
-            rst = [rst data];
-            rstLength = size(rst,2);
-            if rstLength >= bufferSize*sampleRate
-                save('/home/user/Desktop/ControlByBCI/dataset/data.mat','rst');
-                break
-                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
-            end
-        end
-        
-        fclose(dataClient);
-
-        %{
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
-        fwrite(s,[1 225 1 0 1]);
-        %}
+        fwrite(s,[1 225 1 0 255]);
 
         % After collect 1s
         Screen('TextSize',win,100);
@@ -178,13 +160,27 @@ try
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(1);
 
+        while true
+            rawData = fread(dataClient, nChan*updatePoints, 'float');
+            data = reshape(rawData,[nChan,updatePoints]);
+            rst = [rst data];
+            rstLength = size(rst,2);
+            if rstLength >= bufferSize*sampleRate
+                save('C:\Users\user\Desktop\ControlByBCI\dataset\data.mat','rst');
+                break
+                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
+            end
+        end
+        
+        fclose(dataClient);
+
     % end
-    % fclose(s);
+    fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
-    system("python /home/user/Desktop/ControlByBCI/program/FBCCA/FEbyFBCCA.py");
+    system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
 catch
     Screen('CloseAll');
     Screen('Close');

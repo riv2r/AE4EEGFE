@@ -3,7 +3,6 @@ import scipy.signal
 import numpy as np
 import mne
 import sys
-sys.path.append("program/CCA")
 from GetDataSSVEP import GetData
 
 def filterbank(eeg, fs, idx_fb):    

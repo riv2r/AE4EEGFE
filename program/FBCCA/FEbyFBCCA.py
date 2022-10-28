@@ -1,6 +1,4 @@
 import mne
-import sys
-sys.path.append("program/CCA")
 from GetDataSSVEP import GetData
 from sklearn.cross_decomposition import CCA
 from filterbank import filterbank
@@ -131,15 +129,17 @@ def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
 
 
 if __name__=="__main__":
-    data_in_mat = '/home/user/Desktop/ControlByBCI/dataset/data.mat'
-
-    data = scio.loadmat(data_in_mat)['rst'][:8]
-    print(data.shape)
+    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
 
     ch_names = ['POz','Oz','PO3','PO4','PO5','PO6','O1','O2']
-    sfreq = 2400
+    sfreq = 1000
     ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
     info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
+
+    data = scio.loadmat(data_in_mat)['rst'][:9]
+    idx = np.nonzero(data)[1][-2]
+    data = data[:8,idx:idx+4*sfreq]
+
     raw = mne.io.RawArray(data,info)
 
     dataset=GetData()    

@@ -16,6 +16,7 @@ s=serial('COM8','BaudRate',115200);
 fopen(s);
 
 %% Initiate TCP/IP
+%{
 % host IP and Port
 ipAddress = 'localhost';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,6 +40,7 @@ end
 dataClient = tcpclient(ipAddress,Port);
 % dataClient properties initialize
 dataClient.InputBufferSize = 4*nChan*updatePoints*10;
+%}
 
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
@@ -83,7 +85,7 @@ try
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
-    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[640 300 1280 780]);
+    [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
     [width,height]=Screen('WindowSize',win);
     % initiate target size 
     targetWidth=100;
@@ -104,13 +106,14 @@ try
     Priority(topPriorityLevel);
     vb1=Screen('Flip',win);
     waitframes = 1;
-
-    % while ~KbCheck
-
+    
+    num=0;
+    while num<20%~KbCheck
+        %{
         rst=[];
         % turn on client
         fopen(dataClient);
-
+        %}
         % Before collect 1s
         Screen('TextSize',win,100);
         Screen('TextFont',win,'Times');
@@ -145,7 +148,7 @@ try
                 % disp('over');
             end
         end
-        
+
         % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
         fwrite(s,[1 225 1 0 255]);
 
@@ -155,7 +158,8 @@ try
         DrawFormattedText(win,'End','center','center',[0 0 0]);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
         WaitSecs(1);
-
+        num=num+1;
+        %{
         while true
             rawData = fread(dataClient, nChan*updatePoints, 'float');
             data = reshape(rawData,[nChan,updatePoints]);
@@ -169,15 +173,15 @@ try
         end
         
         fclose(dataClient);
-
-    % end
+        %}
+    end
     fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
 
-    system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
+    % system("python C:\Users\user\Desktop\ControlByBCI\program\CCA\FEbyCCA.py");
     
 catch
     Screen('CloseAll');

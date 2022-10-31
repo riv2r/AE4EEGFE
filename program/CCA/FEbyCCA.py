@@ -4,13 +4,14 @@ from sklearn.cross_decomposition import CCA
 from GetDataSSVEP import GetData
 import mne
 import time
+import scipy.io as scio
 
 
 class FEbyCCA(object):
 
     def __init__(self):
 
-        self.freqs          =   [6.67,7.5,8.57,10.0,12.0]
+        self.freqs          =   [7.5,8.57,10.0,12.0]
         self.samplingRate   =   1000
         self.numSamplingPoints = 5000
 
@@ -32,7 +33,7 @@ class FEbyCCA(object):
         # get reference signals
         referSignals = []
         # number of harmonics
-        Nh=4
+        Nh=3
         fs=self.samplingRate
         Ns=self.numSamplingPoints
         # stimulation frequency
@@ -130,6 +131,7 @@ class FEbyCCA(object):
         n_components=1
         # self.findS(EEGDataset,freqSet)
         rst=self.findCorr(n_components,EEGDataset,freqSet)
+        # print(rst)
         rstMax=max(rst,key=float)
         predClass=np.argmax(rst)+1
         # print(predClass)
@@ -138,41 +140,109 @@ class FEbyCCA(object):
 
 
 if __name__=='__main__':
-    
-    start = time.time()
-    path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
-    raw = mne.io.read_raw_brainvision(path)
-    # use bellow codes to find st_time 
-    # raw.plot()
-    # plt.show()
+    '''
+    ch_names = ['POz','PO3','PO4','Oz','O1','O2']
+    sfreq = 1000
+    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
 
-    picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
+    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
+    data = scio.loadmat(data_in_mat)['rst'][:9]
+    idx = np.where(data[8,:]==255)[0][0]
+    # print(idx)
+    data1 = data[0:3,idx-4*sfreq:idx]
+    data2 = data[5:8,idx-4*sfreq:idx]
+    data = np.vstack((data1,data2))
+
+    raw = mne.io.RawArray(data,info)
+
+    dataset=GetData()    
+
+    raw=dataset.preProcessing(raw)
+    # raw=dataset.repairEOGByICA(raw)
+
+    data = raw.get_data()
+    FS = raw.info['sfreq']
+    numSmpls = data.shape[1]
+    #-----FEbyCCA-----#
+    temp = FEbyCCA()
+    # temp.initialize()
+    temp.samplingRate = FS
+    temp.numSamplingPoints = numSmpls
+    
+    
+    predClass = temp.process(data)
+    print(predClass)
+    '''
+
+    
+    # start = time.time()
+    path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-1/data.bdf'
+    raw = mne.io.read_raw_bdf(path)
+    # use bellow codes to find st_time 
+
+    picks = ['POz','Oz','PO3','PO4','O1','O2']
     raw.pick_channels(picks)
+    trigger_time = [12.131, 16.146,
+                    18.167, 22.177,
+                    24.198, 28.209,
+                    30.230, 34.240,
+                    36.262, 40.272,
+                    42.292, 46.303,
+                    48.324, 52.335,
+                    54.354, 58.366,
+                    60.386, 64.397,
+                    66.418, 70.428,
+                    72.449, 76.460,
+                    78.480, 82.491,
+                    84.511, 88.524,
+                    90.543, 94.555,
+                    96.575, 100.586,
+                    102.606, 106.617,
+                    108.637, 112.648,
+                    114.669, 118.680,
+                    120.700, 124.711,
+                    126.732, 130.743]
 
     # By observation
     # SSVEP_BCI_DATA_1: 12 9.5 9
     # SSVEP_BCI_DATA_2: 10 12 14
     #                   11 11 9
     #                   20 16 6
+    '''
     last_time = 125
     st_time = 9
     ed_time = st_time+last_time
-    raw = raw.crop(st_time,ed_time)
+    '''
+    rst = []
+    for i in range(20):
+        raw_temp = raw.copy().crop(trigger_time[2*i],trigger_time[2*i+1])
 
-    dataset=GetData()    
+        dataset=GetData()    
 
-    raw=dataset.preProcessing(raw)
-    raw=dataset.repairEOGByICA(raw)
-    data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
+        raw_temp=dataset.preProcessing(raw_temp)
+        # raw=dataset.repairEOGByICA(raw)
+        # data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
 
-    #-----FEbyCCA-----#
-    temp = FEbyCCA()
-    # temp.initialize()
-    temp.samplingRate = samplingRate
-    temp.numSamplingPoints = numSamplingPoints
+        data = raw_temp.get_data()
+        FS = raw_temp.info['sfreq']
+        numSmpls = data.shape[1]
+
+        #-----FEbyCCA-----#
+        temp = FEbyCCA()
+        # temp.initialize()
+        temp.samplingRate = FS
+        temp.numSamplingPoints = numSmpls
+    
+    
+        predClass = temp.process(data)
+        rst.append(predClass)
+
+    print(rst)
     # print(temp.freqs)
     # print(temp.samplingRate)
     # print(temp.numSamplingPoints)
+    '''
     score = 0
     for i in range(numGroups):
         datatemp = data[i]
@@ -183,3 +253,5 @@ if __name__=='__main__':
     print('识别率为：',rate,'%')
     end = time.time()
     print('程序执行时间为：',end-start,'s')
+    '''
+    

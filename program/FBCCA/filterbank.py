@@ -10,9 +10,9 @@ def filterbank(eeg, fs, idx_fb):
         warnings.warn('stats:filterbank:MissingInput '\
                      +'Missing filter index. Default value (idx_fb = 0) will be used.')
         idx_fb = 0
-    elif (idx_fb < 0 or 16 < idx_fb):
+    elif (idx_fb < 0 or 20 < idx_fb):
         raise ValueError('stats:filterbank:InvalidInput '\
-                        +'The number of sub-bands must be 0 <= idx_fb <= 16.')
+                        +'The number of sub-bands must be 0 <= idx_fb <= 20.')
             
     if (len(eeg.shape)==2):
         num_chans = eeg.shape[0]
@@ -27,8 +27,11 @@ def filterbank(eeg, fs, idx_fb):
     passband = [6, 14, 22, 30, 38, 46, 54, 62, 70, 78]
     stopband = [4, 10, 16, 24, 32, 40, 48, 56, 64, 72]
     '''
-    passband = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
-    stopband = [4, 9 , 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84]
+    passband = np.arange(5,86,4)
+    stopband = np.arange(4,85,4)
+    # passband = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
+    # stopband = [4, 9 , 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84]
+    
     Wp = [passband[idx_fb]/Nq, 90/Nq]
     Ws = [stopband[idx_fb]/Nq, 100/Nq]
     [N, Wn] = scipy.signal.cheb1ord(Wp, Ws, 3, 40) # band pass filter StopBand=[Ws(1)~Ws(2)] PassBand=[Wp(1)~Wp(2)]
@@ -50,6 +53,7 @@ def filterbank(eeg, fs, idx_fb):
         
         
 if __name__ == '__main__':
+    print(np.arange(4,85,4))
     '''
     from scipy.io import loadmat
     

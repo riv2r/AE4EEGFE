@@ -11,11 +11,11 @@ function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
     for i=1:winHeight % first row to last
         for j=1:winWidth % first column to last
             % Target1:Top
-            if j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i<=targetHeight
+            if j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i<=targetHeight+50 && i>50
                 targetMatrix{1}(i,j)=1; % match target coordinate
                 % disp('got it');
             % Target2:Left
-            elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j<=targetWidth
+            elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j<=targetWidth+50 && j>50
                 targetMatrix{2}(i,j)=1;
                 % disp('got it');
             %{
@@ -25,11 +25,11 @@ function [Paradigm]=GetParadigm(winWidth,winHeight,targetWidth,targetHeight)
                 % disp('got it');
             %}
             % Target3:Right
-            elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j>winWidth-targetWidth
+            elseif i>winHeight/2-targetHeight/2 && i<=winHeight/2+targetHeight/2 && j>winWidth-targetWidth-50 && j<=winWidth-50
                 targetMatrix{3}(i,j)=1;
                 % disp('got it');
             % Target4:Down
-            elseif j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i>winHeight-targetHeight
+            elseif j>winWidth/2-targetWidth/2 && j<=winWidth/2+targetWidth/2 && i>winHeight-targetHeight-50 && i<=winHeight-50
                 targetMatrix{4}(i,j)=1;
                 % disp('got it');
             end

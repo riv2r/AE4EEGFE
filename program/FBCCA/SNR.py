@@ -54,6 +54,38 @@ def snr_spectrum(psd, noise_n_neighbor_freqs=1, noise_skip_neighbor_freqs=1):
 
 if __name__=='__main__':
 
+    path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-1/data.bdf'
+    raw = mne.io.read_raw_bdf(path)
+    # use bellow codes to find st_time 
+
+    picks = ['POz','Oz','PO3','PO4','O1','O2']
+    raw.pick_channels(picks)
+    trigger_time = [12.131, 16.146,
+                    18.167, 22.177,
+                    24.198, 28.209,
+                    30.230, 34.240,
+                    36.262, 40.272,
+                    42.292, 46.303,
+                    48.324, 52.335,
+                    54.354, 58.366,
+                    60.386, 64.397,
+                    66.418, 70.428,
+                    72.449, 76.460,
+                    78.480, 82.491,
+                    84.511, 88.524,
+                    90.543, 94.555,
+                    96.575, 100.586,
+                    102.606, 106.617,
+                    108.637, 112.648,
+                    114.669, 118.680,
+                    120.700, 124.711,
+                    126.732, 130.743]
+    raw = raw.copy().crop(trigger_time[0],trigger_time[1])
+
+
+
+
+    '''
     # start = time.time()
     path = 'dataset/SSVEP_BCI_DATA_1/1-1.vhdr'
     raw_origin = mne.io.read_raw_brainvision(path)
@@ -73,16 +105,19 @@ if __name__=='__main__':
     st_time = 12
     ed_time = st_time+last_time
     raw = raw_origin.copy().crop(st_time, ed_time)
+    '''
 
     dataset=GetData() 
 
     raw=dataset.preProcessing(raw)
-    raw=dataset.repairEOGByICA(raw)
+    # raw=dataset.repairEOGByICA(raw)
 
-    epochs = mne.make_fixed_length_epochs(raw, duration=5)
+    epochs = mne.make_fixed_length_epochs(raw, duration=raw.times[-1])
     epochs = epochs[0]
 
-    data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
+    data = raw.get_data()
+
+    # data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
     # end = time.time()
     # print('程序执行时间为：',end-start,'s')
     # raw.plot()
@@ -91,9 +126,9 @@ if __name__=='__main__':
     # dataTemp = data[0] # (6,1250)
     
     tmin = 0.
-    tmax = 5.
+    tmax = raw.times[-1]
     fmin = 1.
-    fmax = 90.
+    fmax = 80.
     sfreq = epochs.info['sfreq']
 
     psds, freqs = mne.time_frequency.psd_welch(

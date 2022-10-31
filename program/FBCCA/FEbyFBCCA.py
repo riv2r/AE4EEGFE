@@ -26,7 +26,7 @@ Output:
 
 '''
 
-def fbcca(eeg, list_freqs, fs, num_harms=3, num_fbs=16):
+def fbcca(eeg, list_freqs, fs, num_harms=4, num_fbs=20):
     
     fb_coefs = np.power(np.arange(1,num_fbs+1),(-1.25)) + 0.25
     num_targs = 4
@@ -73,7 +73,7 @@ Output:
                    (# of targets, 2*# of channels, Data length [sample])
 '''      
 
-def cca_reference(list_freqs, fs, num_smpls, num_harms=3):
+def cca_reference(list_freqs, fs, num_smpls, num_harms=4):
     
     num_freqs = len(list_freqs)
     tidx = np.arange(1,num_smpls+1)/fs #time index
@@ -130,15 +130,118 @@ def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
 
 if __name__=="__main__":
 
-    ch_names = ['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
+    path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-3/data.bdf'
+    raw = mne.io.read_raw_bdf(path)
+    # use bellow codes to find st_time 
+
+    picks = ['POz','Oz','PO3','PO4','O1','O2']
+    raw.pick_channels(picks)
+    '''
+    trigger_time = [12.131, 16.146,
+                    18.167, 22.177,
+                    24.198, 28.209,
+                    30.230, 34.240,
+                    36.262, 40.272,
+                    42.292, 46.303,
+                    48.324, 52.335,
+                    54.354, 58.366,
+                    60.386, 64.397,
+                    66.418, 70.428,
+                    72.449, 76.460,
+                    78.480, 82.491,
+                    84.511, 88.524,
+                    90.543, 94.555,
+                    96.575, 100.586,
+                    102.606, 106.617,
+                    108.637, 112.648,
+                    114.669, 118.680,
+                    120.700, 124.711,
+                    126.732, 130.743]
+    trigger_time = [13.017, 17.021,
+                    19.042, 23.053,
+                    25.072, 29.084,
+                    31.104, 35.115,
+                    37.137, 41.147,
+                    43.167, 47.179,
+                    49.199, 53.210,
+                    55.230, 59.241,
+                    61.261, 65.274,
+                    67.293, 71.304,
+                    73.324, 77.335,
+                    79.355, 83.366,
+                    85.387, 89.399,
+                    91.418, 95.430,
+                    97.450, 101.461,
+                    103.482, 107.493,
+                    109.512, 113.524,
+                    115.544, 119.555,
+                    121.575, 125.587,
+                    127.607, 131.618]
+                    '''
+    trigger_time = [13.231, 17.233,
+                    19.253, 23.265,
+                    25.286, 29.297,
+                    31.316, 35.328,
+                    37.351, 41.359,
+                    43.380, 47.392,
+                    49.411, 53.422,
+                    55.445, 59.454,
+                    61.474, 65.485,
+                    67.505, 71.516,
+                    73.537, 77.548,
+                    79.568, 83.580,
+                    85.599, 89.610,
+                    91.630, 95.642,
+                    97.663, 101.673,
+                    103.693, 107.705,
+                    109.724, 113.736,
+                    115.756, 119.768,
+                    121.789, 125.799,
+                    127.819, 131.831]
+    # By observation
+    # SSVEP_BCI_DATA_1: 12 9.5 9
+    # SSVEP_BCI_DATA_2: 10 12 14
+    #                   11 11 9
+    #                   20 16 6
+    '''
+    last_time = 125
+    st_time = 9
+    ed_time = st_time+last_time
+    '''
+    rst = []
+    for i in range(20):
+        raw_temp = raw.copy().crop(trigger_time[2*i],trigger_time[2*i+1])
+
+        dataset=GetData()    
+
+        raw_temp=dataset.preProcessing(raw_temp)
+        # raw=dataset.repairEOGByICA(raw)
+        # data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
+
+        data = raw_temp.get_data()
+        listFreqs = [7.5, 8.57, 10.0, 12.0]
+        FS = raw_temp.info['sfreq']
+        numSmpls = data.shape[1]
+
+        predClass = fbcca(data, listFreqs, FS)
+        rst.append(predClass)
+
+    print(rst)
+    
+    
+    '''
+    ch_names = ['POz','PO3','PO4','Oz','O1','O2']
     sfreq = 1000
-    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
     info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
 
     data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
     data = scio.loadmat(data_in_mat)['rst'][:9]
-    idx = np.nonzero(data)[1][-2]
-    data = data[:8,idx:idx+4*sfreq]
+    idx = np.where(data[8,:]==255)[0][0]
+    # print(idx)
+    data1 = data[0:3,idx-4*sfreq:idx]
+    data2 = data[5:8,idx-4*sfreq:idx]
+    data = np.vstack((data1,data2))
 
     raw = mne.io.RawArray(data,info)
 
@@ -148,12 +251,13 @@ if __name__=="__main__":
     # raw=dataset.repairEOGByICA(raw)
 
     data = raw.get_data()
-    listFreqs = [7.5, 8.57, 10, 12]
+    listFreqs = [7.5, 8.57, 10.0, 12.0]
     FS = raw.info['sfreq']
     numSmpls = data.shape[1]
-
+    
     predClass = fbcca(data, listFreqs, FS)
     print(predClass)
+    '''
 
     '''
     start = time.time()

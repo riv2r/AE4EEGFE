@@ -10,37 +10,26 @@ close all;
 
 %% Initiate serial
 delete(instrfindall);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% modify Port name 'COM8'
+% Trigger Serial Port: 'COM8'
 s=serial('COM8','BaudRate',115200);
 fopen(s);
 
 %% Initiate TCP/IP
-%{
-% host IP and Port
 ipAddress = 'localhost';
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% modify Port
 Port = 8712;
 % number of channels: SSVEP-8 + 1 Trigger
 nChan = 9;
-% sampling rate
 sampleRate = 1000;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% modify buffer size (in seconds) 1 + 4 + 1
-bufferSize = 6;
-% update interval (in ms)
+% modify buffer size (in seconds)
+bufferSize = 5;
 updateInterval = 0.04;% 40 ms
-% calculate update points
 if round(sampleRate * updateInterval) > 1
     updatePoints = round(sampleRate * updateInterval);
 else
     updatePoints = sampleRate;
 end
 dataClient = tcpclient(ipAddress,Port);
-% dataClient properties initialize
 dataClient.InputBufferSize = 4*nChan*updatePoints*10;
-%}
 
 %% Initiate frequency
 % Frames Period Freq. Simulated signal. 0 light. 1 dark
@@ -76,28 +65,23 @@ end
 for i=1:4
     freqCombine(i,:) = repmat(freq{i},1,lcmFreq/length(freq{i})); 
 end
-% revert value
 freqCombine=1-freqCombine;
 
 try
     screens=Screen('Screens');
     screenNumber = max(screens);
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % test size 1 [640 300 1280 780] 640x480
     % test size 2 [0 0 1920 1080] 1920x1080
     [win,winRect]=Screen('OpenWindow',screenNumber,[255 255 255],[0 0 1920 1080]);
     [width,height]=Screen('WindowSize',win);
-    % initiate target size 
     targetWidth=100;
     targetHeight=100;
-    % draw texture to screen
     screenMatrix=GetParadigm(width, height, targetWidth, targetHeight);
     for i=1:16
         texture(i)=Screen('MakeTexture',win,uint8(screenMatrix{i})*255);
     end
     textureWhite=Screen('MakeTexture',win,uint8(ones(size(screenMatrix{1})))*255);
     textureBlack=Screen('MakeTexture',win,uint8(zeros(size(screenMatrix{1})))*255);
-    % Define refresh rate.
     ifi=Screen('GetFlipInterval',win);
     topPriorityLevel = MaxPriority(win);
     indexflip=1;
@@ -107,82 +91,60 @@ try
     vb1=Screen('Flip',win);
     waitframes = 1;
     
-    num=0;
-    while num<20%~KbCheck
-        %{
-        rst=[];
-        % turn on client
-        fopen(dataClient);
-        %}
-        % Before collect 1s
-        Screen('TextSize',win,100);
-        Screen('TextFont',win,'Times');
-        DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
+    % Before collect 1s
+    Screen('TextSize',win,100);
+    Screen('TextFont',win,'Times');
+    DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
+    vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+    WaitSecs(0.5);
+
+    rst=[];
+    fopen(dataClient);
+
+    % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
+    fwrite(s,[1 225 1 0 255]);
+
+    tic;
+    while toc<=3
+        textureValue=freqCombine(:,indexflip).*[1;2;4;8];
+        textureValue=textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
+        Screen('DrawTexture',win,texture(textureValue));
+        Screen('DrawingFinished',win);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        WaitSecs(1);
-
-        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
-        fwrite(s,[1 225 1 0 255]);
-
-        tic;
-        while toc<=4
-            % Drawing
-            % Compute texture value based on display value from freq long matrixes
-            textureValue=freqCombine(:,indexflip).*[1;2;4;8];
-            textureValue=textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
-            % Draw it on the back buffer
-            Screen('DrawTexture',win,texture(textureValue));
-            % Display current index
-            % Screen('DrawText',win,num2str(indexflip),0,0,255);
-            % Tell PTB no more drawing commands will be issued until the next flip
-            Screen('DrawingFinished',win);
-            % Fliping
-            % Screen('Flip',win,vb1+halfifi);
-            % Flip ASAP
-            vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-            indexflip=indexflip+1;
-    
-            % Reset index at the end of freq matrix
-            if indexflip>lcmFreq
-                indexflip=1;
-                % disp('over');
-            end
+        indexflip=indexflip+1;
+        if indexflip>lcmFreq
+            indexflip=1;
         end
-
-        % send trigger: 0x01 0xE1 0x01 0x00 0x01 '0x01' is trigger value determined by user
-        fwrite(s,[1 225 1 0 255]);
-
-        % After collect 1s
-        Screen('TextSize',win,100);
-        Screen('TextFont',win,'Times');
-        DrawFormattedText(win,'End','center','center',[0 0 0]);
-        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        WaitSecs(1);
-        num=num+1;
-        %{
-        while true
-            rawData = fread(dataClient, nChan*updatePoints, 'float');
-            data = reshape(rawData,[nChan,updatePoints]);
-            rst = [rst data];
-            rstLength = size(rst,2);
-            if rstLength >= bufferSize*sampleRate
-                save('C:\Users\user\Desktop\ControlByBCI\dataset\data.mat','rst');
-                break
-                % rst = rst(:,(end-bufferSize*sampleRate+1):end);
-            end
-        end
-        
-        fclose(dataClient);
-        %}
     end
+
+    % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
+    fwrite(s,[1 225 1 0 255]);
+
+    % After collect 1s
+    Screen('TextSize',win,100);
+    Screen('TextFont',win,'Times');
+    DrawFormattedText(win,'End','center','center',[0 0 0]);
+    vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+    WaitSecs(0.5);
+    
+    while true
+        rawData = fread(dataClient, nChan*updatePoints, 'float');
+        data = reshape(rawData,[nChan,updatePoints]);
+        rst = [rst data];
+        rstLength = size(rst,2);
+        if rstLength >= 10000
+            save('C:\Users\user\Desktop\ControlByBCI\dataset\data.mat','rst');
+            break
+        end
+    end
+    fclose(dataClient);
     fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
+    system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
 
-    % system("python C:\Users\user\Desktop\ControlByBCI\program\CCA\FEbyCCA.py");
-    
 catch
     Screen('CloseAll');
     Screen('Close');

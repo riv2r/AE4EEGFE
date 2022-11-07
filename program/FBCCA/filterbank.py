@@ -22,13 +22,11 @@ def filterbank(eeg, fs, idx_fb):
     
     # Nyquist Frequency = Fs/2N
     Nq = fs/2
-    
-    '''
-    passband = [6, 14, 22, 30, 38, 46, 54, 62, 70, 78]
-    stopband = [4, 10, 16, 24, 32, 40, 48, 56, 64, 72]
-    '''
+
+    # 20 filter banks
     passband = np.arange(5,86,4)
     stopband = np.arange(4,85,4)
+    # 16 filter banks
     # passband = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
     # stopband = [4, 9 , 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 84]
     
@@ -53,35 +51,9 @@ def filterbank(eeg, fs, idx_fb):
         
         
 if __name__ == '__main__':
-    print(np.arange(4,85,4))
-    '''
-    from scipy.io import loadmat
-    
-    D = loadmat("sample.mat")
-    eeg = D['eeg']
-    eeg = eeg[:, :, (33):(33+125), :]
-    eeg = eeg[:,:,:,0] #first bank
-    eeg = eeg[0, :, :] #first target
-    
-    y1 = filterbank(eeg, 250, 0)
-    y2 = filterbank(eeg, 250, 9)
-    
-    y1_from_matlab = loadmat("y1_from_matlab.mat")['y1']
-    y2_from_matlab = loadmat("y2_from_matlab.mat")['y2']
-
-    dif1 = y1 - y1_from_matlab
-    dif2 = y2 - y2_from_matlab    
-    
-    print("Difference between matlab and python = ", np.sum(dif1))
-    print("Difference between matlab and python = ", np.sum(dif2))
-    '''
-
  
     path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
     raw = mne.io.read_raw_brainvision(path)
-    # use bellow codes to find st_time 
-    # raw.plot()
-    # plt.show()
 
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
     raw.pick_channels(picks)
@@ -94,6 +66,7 @@ if __name__ == '__main__':
     last_time = 125
     st_time = 9
     ed_time = st_time+last_time
+    
     raw = raw.crop(st_time,ed_time)
 
     dataset=GetData()    

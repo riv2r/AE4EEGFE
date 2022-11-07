@@ -6,6 +6,7 @@ from scipy.stats import pearsonr
 import numpy as np
 import time
 import scipy.io as scio
+import serial
 
 '''
 Steady-state visual evoked potentials (SSVEPs) detection using the filter
@@ -51,7 +52,6 @@ def fbcca(eeg, list_freqs, fs, num_harms=4, num_fbs=20):
              r[fb_i, class_i] = r_tmp
              
     rho = np.dot(fb_coefs, r)  #weighted sum of r from all different filter banks' result
-    # print(rho)
     tau = np.argmax(rho)+1  #get maximum from the target as the final predict (get the index)
     results = tau #index indicate the maximum(most possible) target
     return results
@@ -129,14 +129,81 @@ def fbcca_realtime(data, list_freqs, fs, num_harms=3, num_fbs=5):
 
 
 if __name__=="__main__":
+    
+    # Real-Time Test
+    
+    ch_names = ['POz','Oz','PO3','PO4','O1','O2']
+    sfreq = 1000
+    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
+    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
 
+    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
+    data = scio.loadmat(data_in_mat)['rst'][:9]
+    idx = np.where(data[8,:]==255)
+    data1 = data[0:3,idx[0][0]:idx[0][1]]
+    data2 = data[5:8,idx[0][0]:idx[0][1]]
+    data = np.vstack((data1,data2))
+
+    raw = mne.io.RawArray(data,info)
+
+    dataset=GetData()    
+
+    raw=dataset.preProcessing(raw)
+
+    data = raw.get_data()
+    
+    listFreqs = [7.5, 8.57, 10.0, 12.0]
+    FS = raw.info['sfreq']
+    numSmpls = data.shape[1]
+    
+    predClass = fbcca(data, listFreqs, FS)
+    print(predClass)
+    
+    '''
+    predClass = predClass +48;
+    # 连接串口
+    serial = serial.Serial('COM10',115200,timeout=2)
+
+    if serial.isOpen():
+
+        print ('串口已打开')
+        
+        # ASCII码对应指令
+        # 49 50 51 52
+        # 1  2  3  4
+        # 前 左 右 后
+
+        data = (chr(predClass)+'\r\n').encode()# 发送的数据
+        serial.write(data)# 串口写数据
+     
+        while True:
+            data = serial.read(100)# 串口读20位数据
+            if data != b'':
+                break
+        print(data)
+            
+    else:
+        print ('串口未打开')
+     
+     
+     
+    # 关闭串口
+    serial.close()
+     
+    if serial.isOpen():
+        print ('串口未关闭')
+    else:
+        print ('串口已关闭')
+    '''
+    
+    '''
+    # Offline Test
     path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-3/data.bdf'
     raw = mne.io.read_raw_bdf(path)
-    # use bellow codes to find st_time 
 
     picks = ['POz','Oz','PO3','PO4','O1','O2']
     raw.pick_channels(picks)
-    '''
+    
     trigger_time = [12.131, 16.146,
                     18.167, 22.177,
                     24.198, 28.209,
@@ -157,6 +224,7 @@ if __name__=="__main__":
                     114.669, 118.680,
                     120.700, 124.711,
                     126.732, 130.743]
+    
     trigger_time = [13.017, 17.021,
                     19.042, 23.053,
                     25.072, 29.084,
@@ -177,7 +245,7 @@ if __name__=="__main__":
                     115.544, 119.555,
                     121.575, 125.587,
                     127.607, 131.618]
-                    '''
+             
     trigger_time = [13.231, 17.233,
                     19.253, 23.265,
                     25.286, 29.297,
@@ -198,75 +266,35 @@ if __name__=="__main__":
                     115.756, 119.768,
                     121.789, 125.799,
                     127.819, 131.831]
-    # By observation
-    # SSVEP_BCI_DATA_1: 12 9.5 9
-    # SSVEP_BCI_DATA_2: 10 12 14
-    #                   11 11 9
-    #                   20 16 6
-    '''
-    last_time = 125
-    st_time = 9
-    ed_time = st_time+last_time
-    '''
+                
     rst = []
+    rst_mat = np.array([0,0,0,0])
     for i in range(20):
         raw_temp = raw.copy().crop(trigger_time[2*i],trigger_time[2*i+1])
+        print(raw_temp)
 
         dataset=GetData()    
 
         raw_temp=dataset.preProcessing(raw_temp)
-        # raw=dataset.repairEOGByICA(raw)
-        # data,t,numGroups,numChans,numSamplingPoints,samplingRate = dataset.getEpochs(raw)
 
         data = raw_temp.get_data()
         listFreqs = [7.5, 8.57, 10.0, 12.0]
         FS = raw_temp.info['sfreq']
         numSmpls = data.shape[1]
 
-        predClass = fbcca(data, listFreqs, FS)
+        predClass, mat = fbcca(data, listFreqs, FS)
         rst.append(predClass)
+        rst_mat = np.vstack((rst_mat, mat))
 
     print(rst)
-    
-    
+    rst_mat = rst_mat[1:]
+    print(rst_mat)
     '''
-    ch_names = ['POz','PO3','PO4','Oz','O1','O2']
-    sfreq = 1000
-    ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
-    info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
-
-    data_in_mat = 'C:/Users/user/Desktop/ControlByBCI/dataset/data.mat'
-    data = scio.loadmat(data_in_mat)['rst'][:9]
-    idx = np.where(data[8,:]==255)[0][0]
-    # print(idx)
-    data1 = data[0:3,idx-4*sfreq:idx]
-    data2 = data[5:8,idx-4*sfreq:idx]
-    data = np.vstack((data1,data2))
-
-    raw = mne.io.RawArray(data,info)
-
-    dataset=GetData()    
-
-    raw=dataset.preProcessing(raw)
-    # raw=dataset.repairEOGByICA(raw)
-
-    data = raw.get_data()
-    listFreqs = [7.5, 8.57, 10.0, 12.0]
-    FS = raw.info['sfreq']
-    numSmpls = data.shape[1]
     
-    predClass = fbcca(data, listFreqs, FS)
-    print(predClass)
-    '''
-
     '''
     start = time.time()
     path = 'dataset/SSVEP_BCI_DATA_1/1-3.vhdr'
     raw_origin = mne.io.read_raw_brainvision(path)
-    # use bellow codes to find st_time 
-    # raw.plot()
-    # plt.show()
-
     picks = ['IO','POz','Oz','PO3','PO4','O1','O2']
     raw_origin.pick_channels(picks)
 
@@ -275,47 +303,11 @@ if __name__=="__main__":
     # SSVEP_BCI_DATA_2: 10 12 14
     #                   11 11 9
     #                   20 16 6
+    
     last_time = 125
     st_time = 9
     ed_time = st_time+last_time
-    raw_origin = raw_origin.crop(st_time,ed_time)
-
-    rst = []
-
-    for i in range(0,125,5):
-        # save usable .mat file
-        if not i%25:
-            continue
-        else:
-            raw = raw_origin.copy().crop(i,i+5)
-            data = raw.get_data()[:,:5000]
-            data_in_mat = 'dataset/data_in_mat.mat'
-            scio.savemat(data_in_mat,{'data':data})
-
-            data = scio.loadmat('dataset/data_in_mat.mat')['data']
-            ch_names = picks
-            sfreq = 1000
-            ch_types = ['eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg', 'eeg']
-            info = mne.create_info(ch_names = ch_names, sfreq = sfreq, ch_types = ch_types)
-            raw = mne.io.RawArray(data,info)
-
-            dataset=GetData()    
-
-            raw=dataset.preProcessing(raw)
-            raw=dataset.repairEOGByICA(raw)
-
-            data = raw.get_data()
-            listFreqs = [7.5, 8.57, 10, 12]
-            FS = raw.info['sfreq']
-            numSmpls = data.shape[1]
-
-            predClass = fbcca(data, listFreqs, FS)
-            rst.append(predClass)
-    
-    for c in rst:
-        print(c)
-    '''
-    '''
+    raw = raw_origin.crop(st_time,ed_time)
 
     dataset=GetData()    
 

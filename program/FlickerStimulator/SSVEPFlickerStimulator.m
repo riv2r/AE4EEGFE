@@ -90,60 +90,65 @@ try
     Priority(topPriorityLevel);
     vb1=Screen('Flip',win);
     waitframes = 1;
-    
-    % Before collect 1s
-    Screen('TextSize',win,100);
-    Screen('TextFont',win,'Times');
-    DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
-    vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-    WaitSecs(0.5);
 
-    rst=[];
-    fopen(dataClient);
+    while ~KbCheck
 
-    % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
-    fwrite(s,[1 225 1 0 255]);
-
-    tic;
-    while toc<=3
-        textureValue=freqCombine(:,indexflip).*[1;2;4;8];
-        textureValue=textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
-        Screen('DrawTexture',win,texture(textureValue));
-        Screen('DrawingFinished',win);
+        % Before collect
+        Screen('TextSize',win,100);
+        Screen('TextFont',win,'Times');
+        DrawFormattedText(win,'Ready to take control','center','center',[0 0 0]);
         vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-        indexflip=indexflip+1;
-        if indexflip>lcmFreq
-            indexflip=1;
-        end
-    end
-
-    % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
-    fwrite(s,[1 225 1 0 255]);
-
-    % After collect 1s
-    Screen('TextSize',win,100);
-    Screen('TextFont',win,'Times');
-    DrawFormattedText(win,'End','center','center',[0 0 0]);
-    vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
-    WaitSecs(0.5);
+        WaitSecs(0.5);
     
-    while true
-        rawData = fread(dataClient, nChan*updatePoints, 'float');
-        data = reshape(rawData,[nChan,updatePoints]);
-        rst = [rst data];
-        rstLength = size(rst,2);
-        if rstLength >= 10000
-            save('C:\Users\user\Desktop\ControlByBCI\dataset\data.mat','rst');
-            break
+        rst=[];
+        fopen(dataClient);
+    
+        % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
+        fwrite(s,[1 225 1 0 255]);
+    
+        tic;
+        while toc<=4
+            textureValue=freqCombine(:,indexflip).*[1;2;4;8];
+            textureValue=textureValue(4)+textureValue(3)+textureValue(2)+textureValue(1)+1;
+            Screen('DrawTexture',win,texture(textureValue));
+            Screen('DrawingFinished',win);
+            vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+            indexflip=indexflip+1;
+            if indexflip>lcmFreq
+                indexflip=1;
+            end
         end
+    
+        % send trigger: 0x01 0xE1 0x01 0x00 0xFF '0xFF' is trigger value determined by user
+        fwrite(s,[1 225 1 0 255]);
+    
+        % After collect
+        Screen('TextSize',win,100);
+        Screen('TextFont',win,'Times');
+        DrawFormattedText(win,'End','center','center',[0 0 0]);
+        vb1=Screen('Flip',win,vb1+(waitframes-0.5)*ifi);
+        WaitSecs(0.5);
+        
+        while true
+            rawData = fread(dataClient, nChan*updatePoints, 'float');
+            data = reshape(rawData,[nChan,updatePoints]);
+            rst = [rst data];
+            rstLength = size(rst,2);
+            if rstLength >= 10000
+                save('C:\Users\user\Desktop\ControlByBCI\dataset\data.mat','rst');
+                break
+            end
+        end
+
+        fclose(dataClient);
+        system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
     end
-    fclose(dataClient);
     fclose(s);
     Priority(0); 
     frame_duration=Screen('GetFlipInterval',win);
     Screen('CloseAll');
     Screen('Close');
-    system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
+%     system("python C:\Users\user\Desktop\ControlByBCI\program\FBCCA\FEbyFBCCA.py");
 
 catch
     Screen('CloseAll');

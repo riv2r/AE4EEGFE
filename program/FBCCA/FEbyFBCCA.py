@@ -159,10 +159,10 @@ if __name__=="__main__":
     predClass = fbcca(data, listFreqs, FS)
     print(predClass)
     
-    '''
+    
     predClass = predClass +48;
     # 连接串口
-    serial = serial.Serial('COM10',115200,timeout=2)
+    serial = serial.Serial('COM9',115200,timeout=2)
 
     if serial.isOpen():
 
@@ -184,7 +184,7 @@ if __name__=="__main__":
             
     else:
         print ('串口未打开')
-     
+    
      
      
     # 关闭串口
@@ -194,7 +194,8 @@ if __name__=="__main__":
         print ('串口未关闭')
     else:
         print ('串口已关闭')
-    '''
+    
+    
     
     '''
     # Offline Test

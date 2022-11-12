@@ -21,7 +21,7 @@ if serial.isOpen():
         if data != b'':
             break
     print(data)
-	
+    
 else:
     print ('串口未打开')
  

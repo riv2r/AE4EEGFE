@@ -95,7 +95,7 @@ if __name__=='__main__':
     tmin = 0.
     tmax = raw.times[-1]
     fmin = 1.
-    fmax = 80.
+    fmax = 90.
     sfreq = epochs.info['sfreq']
 
     psds, freqs = mne.time_frequency.psd_welch(

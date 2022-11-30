@@ -185,8 +185,6 @@ if __name__=="__main__":
     else:
         print ('串口未打开')
     
-     
-     
     # 关闭串口
     serial.close()
      
@@ -195,11 +193,9 @@ if __name__=="__main__":
     else:
         print ('串口已关闭')
     
-    
-    
     '''
     # Offline Test
-    path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-3/data.bdf'
+    path = 'C:/Program Files (x86)/Neuracle/Neusen W/Data/2022/10/221029-1/data.bdf'
     raw = mne.io.read_raw_bdf(path)
 
     picks = ['POz','Oz','PO3','PO4','O1','O2']
@@ -267,7 +263,7 @@ if __name__=="__main__":
                     115.756, 119.768,
                     121.789, 125.799,
                     127.819, 131.831]
-                
+               
     rst = []
     rst_mat = np.array([0,0,0,0])
     for i in range(20):

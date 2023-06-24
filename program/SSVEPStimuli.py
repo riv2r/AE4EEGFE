@@ -114,8 +114,13 @@ class SSVEPStimuli(object):
         self.clock.reset()
 
 
-if __name__=="__main__":
+def startup():
 
     ssvep_stimuli=SSVEPStimuli()
     ssvep_stimuli.start()
     ssvep_stimuli.stop()
+    
+    
+if __name__=="__main__":
+
+    startup()

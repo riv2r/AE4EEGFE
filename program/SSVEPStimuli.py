@@ -1,19 +1,17 @@
 import numpy as np
-from psychopy import core,visual
+from psychopy import core,visual,event
 import time
-import cv2
+
 
 class SSVEPStimuli(object):
 
-    def __init__(self,win=visual.Window(fullscr=True,units='pix',color='black')):
+    def __init__(self,win=visual.Window(size=(1920,1080),fullscr=True,units='pix',color='black')):
 
         self.win=win
 
         self.w=win.size[0]
         self.h=win.size[1]
         self.size=100
-        self.cap=cv2.VideoCapture(0)
-        cv2.namedWindow("capture")
 
         # self.white=[1,1,1]
         # self.black=[-1,-1,-1]
@@ -23,12 +21,8 @@ class SSVEPStimuli(object):
     
     def _get_texture(self):
 
-        texture_sz=min(self.w,self.h)
-        cap_w=int(texture_sz-2*self.size)
-        cap_h=int(cap_w/self.w*self.h)
-        self.cap.set(3,cap_w)
-        self.cap.set(4,cap_h)
-        cv2.moveWindow("capture",int(self.w/2-cap_w/2),int(self.h/2-cap_h/2))
+        # power of 2
+        texture_sz=1024#min(self.w,self.h)
         texture_mat=np.zeros((5,texture_sz,texture_sz))
 
         '''
@@ -87,8 +81,6 @@ class SSVEPStimuli(object):
 
     def stop(self):
 
-        self.cap.release()
-        cv2.destroyAllWindows()
         self.win.close()
         core.quit()
 
@@ -96,27 +88,29 @@ class SSVEPStimuli(object):
 
         patterns=[]
         for idx in range(16):
-            patterns.append(visual.GratingStim(win=self.win,tex=self.texture[idx]))
+            patterns.append(visual.GratingStim(win=self.win,tex=self.texture[idx],pos=(0,0),units='pix'))
         
         idx=0
         self.clock=core.Clock()
-        while self.clock.getTime() < 5.0:
+        while True:#self.clock.getTime() < 5.0:
             texture_val=self.freq[:,idx].dot(np.array([1,2,4,8]))
             patterns[texture_val].draw()
             self.win.flip()
-            ret,frame=self.cap.read()
-            cv2.imshow("capture",frame)
-            if cv2.waitKey(1) & 0xFF==ord('q'):
-                break
             idx+=1
-            if idx>self.lcm_freq:
+            if idx>=self.lcm_freq:
                 idx=0
+            if event.getKeys('q'):
+                break
+
         self.clock.reset()
 
 
 def startup():
 
+    #t1=time.time()
     ssvep_stimuli=SSVEPStimuli()
+    #t2=time.time()
+    #print(t2-t1)
     ssvep_stimuli.start()
     ssvep_stimuli.stop()
     

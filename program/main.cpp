@@ -3,7 +3,7 @@
 #include<pthread.h>
 #include"Python.h"
 
-void* SSVEPStimuliPy(void* args)
+void* ssvepStimuliPy(void* args)
 {
     Py_Initialize();
 	PyGILState_STATE ret=PyGILState_Ensure();
@@ -41,7 +41,7 @@ void* SSVEPStimuliPy(void* args)
     pthread_exit(NULL);
 }
 
-void* LivePy(void* args)
+void* livePy(void* args)
 {
     Py_Initialize();
 	PyGILState_STATE ret=PyGILState_Ensure();
@@ -87,16 +87,16 @@ int main()
 
 	Py_BEGIN_ALLOW_THREADS
 
-    pthread_t thread_1;
-	pthread_t thread_2;
+    pthread_t thread1;
+	pthread_t thread2;
 
-    if(pthread_create(&thread_1,NULL,SSVEPStimuliPy,NULL)!=0) throw std::exception();
-    if(pthread_detach(thread_1)) throw std::exception();
+    if(pthread_create(&thread1,NULL,ssvepStimuliPy,NULL)!=0) throw std::exception();
+    if(pthread_detach(thread1)) throw std::exception();
 
 	sleep(2);
 
-    if(pthread_create(&thread_2,NULL,LivePy,NULL)!=0) throw std::exception();
-    if(pthread_detach(thread_2)) throw std::exception();
+    if(pthread_create(&thread2,NULL,livePy,NULL)!=0) throw std::exception();
+    if(pthread_detach(thread2)) throw std::exception();
 
 	pthread_exit(NULL);
 

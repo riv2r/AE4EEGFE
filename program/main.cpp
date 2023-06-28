@@ -1,17 +1,18 @@
 #include<iostream>
 #include<exception>
-#include<pthread.h>
-#include"Python.h"
+#include<thread>
+#include<Python.h>
 
-void* ssvepStimuliPy(void* args)
+void ssvepStimuliPy()
 {
-    Py_Initialize();
 	PyGILState_STATE ret=PyGILState_Ensure();
+	
+    Py_Initialize();
 
     if(!Py_IsInitialized())
     {
 		std::cout<<".py initialize failed"<<std::endl;
-        pthread_exit(NULL);
+		return;
 	}
 	
     PyRun_SimpleString("import sys");
@@ -22,7 +23,7 @@ void* ssvepStimuliPy(void* args)
 	if(pModule==NULL)
     {
 		std::cout<<"module not found"<<std::endl;
-		pthread_exit(NULL);
+		return;
 	}
 
 	PyObject* pFunc=PyObject_GetAttrString(pModule,"startup");
@@ -30,26 +31,30 @@ void* ssvepStimuliPy(void* args)
 	if(!pFunc || !PyCallable_Check(pFunc))
     {
 		std::cout<<"startup() not found"<<std::endl;
-		pthread_exit(NULL);
+		return;
 	}
 
-	PyObject_CallObject(pFunc,NULL);
+	PyObject* pRet=PyObject_CallObject(pFunc,NULL);
+	Py_DECREF(pRet);
+	Py_DECREF(pFunc);
+	Py_DECREF(pModule);
 
-	PyGILState_Release(ret);
     Py_Finalize();
+	PyGILState_Release(ret);
 
-    pthread_exit(NULL);
+	return;
 }
 
-void* livePy(void* args)
+void livePy()
 {
-    Py_Initialize();
 	PyGILState_STATE ret=PyGILState_Ensure();
+	
+    Py_Initialize();
 
     if(!Py_IsInitialized())
     {
 		std::cout<<".py initialize failed"<<std::endl;
-        pthread_exit(NULL);
+		return;
 	}
 	
     PyRun_SimpleString("import sys");
@@ -60,7 +65,7 @@ void* livePy(void* args)
 	if(pModule==NULL)
     {
 		std::cout<<"module not found"<<std::endl;
-		pthread_exit(NULL);
+		return;
 	}
 
 	PyObject* pFunc=PyObject_GetAttrString(pModule,"startup");
@@ -68,15 +73,18 @@ void* livePy(void* args)
 	if(!pFunc || !PyCallable_Check(pFunc))
     {
 		std::cout<<"startup() not found"<<std::endl;
-		pthread_exit(NULL);
+		return;
 	}
 
-	PyObject_CallObject(pFunc,NULL);
+	PyObject* pRet=PyObject_CallObject(pFunc,NULL);
+	Py_DECREF(pRet);
+	Py_DECREF(pFunc);
+	Py_DECREF(pModule);
 
-	PyGILState_Release(ret);
     Py_Finalize();
+	PyGILState_Release(ret);
 
-    pthread_exit(NULL);
+	return;
 }
 
 
@@ -87,18 +95,20 @@ int main()
 
 	Py_BEGIN_ALLOW_THREADS
 
-    pthread_t thread1;
-	pthread_t thread2;
-
-    if(pthread_create(&thread1,NULL,ssvepStimuliPy,NULL)!=0) throw std::exception();
-    if(pthread_detach(thread1)) throw std::exception();
-
-	sleep(2);
-
-    if(pthread_create(&thread2,NULL,livePy,NULL)!=0) throw std::exception();
-    if(pthread_detach(thread2)) throw std::exception();
-
-	pthread_exit(NULL);
-
+    	std::thread th1(ssvepStimuliPy);
+		sleep(3);
+		std::thread th2(livePy);
+		th1.detach();
+		th2.detach();
+		while(true)
+		{
+			sleep(1);
+		}
+		
+	
 	Py_END_ALLOW_THREADS
+
+	Py_FinalizeEx();
+
+	return 0;
 }

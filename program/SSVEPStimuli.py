@@ -5,7 +5,11 @@ import time
 
 class SSVEPStimuli(object):
 
-    def __init__(self,win=visual.Window(size=(1920,1080),fullscr=True,units='pix',color='black')):
+    '''
+    linux resolution: 1920x1080
+    windows resolution: 1280x720 
+    '''
+    def __init__(self,win=visual.Window(size=(1280,720),fullscr=True,units='pix',color='black')):
 
         self.win=win
 

@@ -2,6 +2,7 @@
 #include<exception>
 #include<thread>
 #include<Python.h>
+#include<windows.h>
 
 void ssvepStimuliPy()
 {
@@ -16,7 +17,8 @@ void ssvepStimuliPy()
 	}
 	
     PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.path.append('/home/user/Desktop/ControlByBCI/program')");
+	//PyRun_SimpleString("sys.path.append('/home/user/Desktop/ControlByBCI/program')");
+	PyRun_SimpleString("sys.path.append('C:/Users/user/Desktop/毕业设计/program/ControlByBCI/program')");
 
 	PyObject* pModule=PyImport_ImportModule("SSVEPStimuli");
 
@@ -58,7 +60,8 @@ void livePy()
 	}
 	
     PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.path.append('/home/user/Desktop/ControlByBCI/program')");
+	//PyRun_SimpleString("sys.path.append('/home/user/Desktop/ControlByBCI/program')");
+	PyRun_SimpleString("sys.path.append('C:/Users/user/Desktop/毕业设计/program/ControlByBCI/program')");
 
 	PyObject* pModule=PyImport_ImportModule("Live");
 
@@ -96,13 +99,14 @@ int main()
 	Py_BEGIN_ALLOW_THREADS
 
     	std::thread th1(ssvepStimuliPy);
-		sleep(3);
+		//sleep(3);
 		std::thread th2(livePy);
 		th1.detach();
 		th2.detach();
 		while(true)
 		{
-			sleep(1);
+			//sleep(1);
+			Sleep(1000);
 		}
 		
 	

@@ -94,7 +94,8 @@ void livePy()
 int main()
 {
 	Py_Initialize();
-	PyEval_InitThreads();
+	//python 3.9 and later does nothing
+	//PyEval_InitThreads();
 
 	Py_BEGIN_ALLOW_THREADS
 
@@ -108,7 +109,6 @@ int main()
 			//sleep(1);
 			Sleep(1000);
 		}
-		
 	
 	Py_END_ALLOW_THREADS
 

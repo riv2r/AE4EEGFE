@@ -4,6 +4,9 @@ dataset/
 # 忽略论文集
 paper/
 
+# 忽略.vscode
+.vscode/
+
 # 忽略build文件夹
 program/build/
 

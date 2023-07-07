@@ -6,16 +6,14 @@ import time
 class SSVEPStimuli(object):
 
     '''
-    linux resolution: 1920x1080
-    windows resolution: 1280x720 
+    windows resolution: 1280x720
     '''
-    def __init__(self,win=visual.Window(size=(1280,720),fullscr=True,units='pix',color='black')):
+    def __init__(self,win=visual.Window(size=(512,512),fullscr=False,units='pix',color='black')):
 
         self.win=win
 
-        self.w=win.size[0]
-        self.h=win.size[1]
-        self.size=100
+        self.win_sz=win.size[0]
+        self.block_sz=64 # 512/64=8
 
         # self.white=[1,1,1]
         # self.black=[-1,-1,-1]
@@ -26,7 +24,7 @@ class SSVEPStimuli(object):
     def _get_texture(self):
 
         # power of 2
-        texture_sz=1024#min(self.w,self.h)
+        texture_sz=self.win_sz
         texture_mat=np.zeros((5,texture_sz,texture_sz))
 
         '''
@@ -38,16 +36,16 @@ class SSVEPStimuli(object):
         for i in range(texture_sz):
             for j in range(texture_sz):
                 # TOP
-                if j>texture_sz/2-self.size/2 and j<=texture_sz/2+self.size/2 and i>texture_sz-self.size:
+                if j>texture_sz/2-self.block_sz/2 and j<=texture_sz/2+self.block_sz/2 and i>texture_sz-self.block_sz:
                     texture_mat[1][i][j]=1
                 # LEFT
-                elif i>texture_sz/2-self.size/2 and i<=texture_sz/2+self.size/2 and j<=self.size:
+                elif i>texture_sz/2-self.block_sz/2 and i<=texture_sz/2+self.block_sz/2 and j<=self.block_sz:
                     texture_mat[2][i][j]=1
                 # RIGHT
-                elif i>texture_sz/2-self.size/2 and i<=texture_sz/2+self.size/2 and j>texture_sz-self.size:
+                elif i>texture_sz/2-self.block_sz/2 and i<=texture_sz/2+self.block_sz/2 and j>texture_sz-self.block_sz:
                     texture_mat[3][i][j]=1
                 # BOT
-                elif j>texture_sz/2-self.size/2 and j<=texture_sz/2+self.size/2 and i<=self.size:
+                elif j>texture_sz/2-self.block_sz/2 and j<=texture_sz/2+self.block_sz/2 and i<=self.block_sz:
                     texture_mat[4][i][j]=1
         
         texture_mat_merged=np.zeros((16,texture_sz,texture_sz))

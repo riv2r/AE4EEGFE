@@ -4,13 +4,14 @@
 #include <windows.h>
 #include <ctime>
 #include <fstream>
+#include "SerialComm/SerialComm.h"
 
+using namespace std;
+/*
 char port[]="COM5";
 // trigger format HEX 0x01 0xE1 0x01 0x00 0xFF
 // 0xFF is value determined by user
 char mark[]={1,(char)225,1,0,(char)255};
-
-using namespace std;
 
 void open(HANDLE& serialHandle)
 {
@@ -56,6 +57,7 @@ void close(HANDLE& serialHandle)
 {
     CloseHandle(serialHandle);
 }
+*/
 
 float ByteToFloat(unsigned char* p)
 {
@@ -92,12 +94,12 @@ int main()
 		return 0;
 	}
     */
-    open(serialHandle);
+    SerialComm sh; 
     connect(dataCli,(sockaddr *)&serAddr,sizeof(serAddr));
-    if(write(serialHandle)) cout<<"success"<<endl;
+    if(sh.write()) cout<<"success"<<endl;
     clock_t st=clock();
     while((double)(clock()-st)/CLOCKS_PER_SEC<=4){}
-    if(write(serialHandle)) cout<<"success"<<endl;
+    if(sh.write()) cout<<"success"<<endl;
     
 	while(row<5000)
     {

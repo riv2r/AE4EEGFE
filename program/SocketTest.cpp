@@ -2,8 +2,8 @@
 #include <ctime>
 #include <fstream>
 
-#include "SerialComm/SerialComm.h"
 #include "SocketComm/SocketComm.h"
+#include "SerialComm/SerialComm.h"
 
 using namespace std;
 
@@ -46,7 +46,7 @@ int main()
     SerialComm sh("COM5");
     //connect(dataCli,(sockaddr *)&serAddr,sizeof(serAddr));
 
-    ch.open();
+    bool flag=ch.open();
 
     if(sh.write()) cout<<"mark"<<endl;
 
@@ -59,7 +59,7 @@ int main()
 
     if(sh.write()) cout<<"mark"<<endl;
     
-	while(row<5000)
+	while(flag && row<5000)
     {
 		char recData[4];
 		int ret=recv(ch.getClientHandle(),recData,4,0);

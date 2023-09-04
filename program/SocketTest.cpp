@@ -2,6 +2,7 @@
 #include <ctime>
 #include <fstream>
 
+// #include <winsock2.h> before #include <windows.h>
 #include "SocketComm/SocketComm.h"
 #include "SerialComm/SerialComm.h"
 
@@ -14,39 +15,13 @@ float ByteToFloat(unsigned char* p)
 
 int main()
 {
-    /*
-	WORD sockVersion=MAKEWORD(2,2);
-	WSADATA data;
-	if(WSAStartup(sockVersion,&data)!=0) return 0;
-	SOCKET dataCli=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if(dataCli==INVALID_SOCKET)
-	{
-		cout<<"invalid socket"<<endl;
-		return 0;
-	}
-		
-	sockaddr_in serAddr;
-	serAddr.sin_family=AF_INET;
-	serAddr.sin_port=htons(8712);
-	serAddr.sin_addr.S_un.S_addr=inet_addr("127.0.0.1");
-    */
-
     vector<vector<float>> res(5000,vector<float>(9,0));
-
     int row=0,col=0;
-    /*
-	if(connect(dataCli,(sockaddr *)&serAddr,sizeof(serAddr))==SOCKET_ERROR)
-    {
-        cout<<"connect error"<<endl;
-		closesocket(dataCli);
-		return 0;
-	}
-    */
+
     SocketComm ch("127.0.0.1",8712);
     SerialComm sh("COM5");
-    //connect(dataCli,(sockaddr *)&serAddr,sizeof(serAddr));
 
-    bool flag=ch.open();
+    bool chValid=ch.open();
 
     if(sh.write()) cout<<"mark"<<endl;
 
@@ -59,7 +34,7 @@ int main()
 
     if(sh.write()) cout<<"mark"<<endl;
     
-	while(flag && row<5000)
+	while(chValid && row<5000)
     {
 		char recData[4];
 		int ret=recv(ch.getClientHandle(),recData,4,0);

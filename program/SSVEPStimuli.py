@@ -1,5 +1,5 @@
 import numpy as np
-from psychopy import core,visual,event
+from psychopy import core,visual,event,monitors
 import time
 
 
@@ -8,12 +8,12 @@ class SSVEPStimuli(object):
     '''
     windows resolution: 1280x720
     '''
-    def __init__(self,win=visual.Window(size=(512,512),fullscr=False,units='pix',color='black')):
+    def __init__(self,win=visual.Window(size=(1280,720),fullscr=True,units='pix',color='black',monitor=monitors.Monitor('testMonitor'))):
 
         self.win=win
 
-        self.win_sz=win.size[0]
-        self.block_sz=64 # 512/64=8
+        self.win_sz=512 # 512=max(squares power of 2)
+        self.block_sz=54 # 512/9=56.8889
 
         # self.white=[1,1,1]
         # self.black=[-1,-1,-1]

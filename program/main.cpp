@@ -1,12 +1,33 @@
 #include<iostream>
-#include<exception>
 #include<thread>
 #include<Python.h>
-#include<windows.h>
+#include"PythonThreadLocker.h"
 
-void ssvepStimuliPy()
+void ssvepStimuliPy();
+void livePy();
+
+int main()
 {
-	PyGILState_STATE ret=PyGILState_Ensure();
+	Py_Initialize();
+	//python 3.9 and later does nothing
+	//PyEval_InitThreads();
+
+	Py_BEGIN_ALLOW_THREADS
+
+    	std::thread th1(ssvepStimuliPy);
+		std::thread th2(livePy);
+		th1.join();
+		th2.join();
+	
+	Py_END_ALLOW_THREADS
+
+	Py_FinalizeEx();
+
+	return 0;
+}
+
+void ssvepStimuliPy(){
+	PythonThreadLocker locker;
 	
     Py_Initialize();
 
@@ -41,14 +62,13 @@ void ssvepStimuliPy()
 	Py_DECREF(pModule);
 
     Py_Finalize();
-	PyGILState_Release(ret);
 
 	return;
 }
 
 void livePy()
 {
-	PyGILState_STATE ret=PyGILState_Ensure();
+	PythonThreadLocker locker;
 	
     Py_Initialize();
 
@@ -83,32 +103,6 @@ void livePy()
 	Py_DECREF(pModule);
 
     Py_Finalize();
-	PyGILState_Release(ret);
 
 	return;
-}
-
-
-int main()
-{
-	Py_Initialize();
-	//python 3.9 and later does nothing
-	//PyEval_InitThreads();
-
-	Py_BEGIN_ALLOW_THREADS
-
-    	std::thread th1(ssvepStimuliPy);
-		std::thread th2(livePy);
-		th1.detach();
-		th2.detach();
-		while(true)
-		{
-			Sleep(1000);
-		}
-	
-	Py_END_ALLOW_THREADS
-
-	Py_FinalizeEx();
-
-	return 0;
 }

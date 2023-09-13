@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cross_decomposition import CCA
 from DataProcess import DataProcess
 import mne
@@ -7,11 +6,11 @@ import time
 import scipy.io as scio
 
 
-class CCAR(object):
+class IntentRec(object):
 
     def __init__(self):
 
-        self.freqs                  =[7.50,8.57,10.0,12.0]
+        self.freqs                  =[9.25,11.25,13.25]
         self.sampling_rate          =1000
         self.num_sampling_points    =5000
 
@@ -28,34 +27,32 @@ class CCAR(object):
         self.num_sampling_points=input('Input Number of Sampling Points:')
         self.num_sampling_points=float(self.num_sampling_points)
 
-    def get_refer_signals(self,target_freq):
+    def get_refer_signals(self,nh=3):
 
-        # get reference signals
-        refer_signals = []
-        # number of harmonics
-        nh=3
+        refer_signals=[]
         fs=self.sampling_rate
         ns=self.num_sampling_points
-        # stimulation frequency
-        f=target_freq
         t=np.arange(0,ns/fs,step=1.0/fs)
-        for i in range(1,nh+1):
-            refer_signals.append(np.sin(2*np.pi*i*f*t))
-            refer_signals.append(np.cos(2*np.pi*i*f*t))
+        for freq in self.freqs:
+            temp=[]
+            for i in range(1,nh+1):
+                temp.append(np.sin(2*np.pi*i*freq*t))
+                temp.append(np.cos(2*np.pi*i*freq*t))
+            refer_signals.append(temp)
         refer_signals=np.array(refer_signals)
 
         return refer_signals
 
-    def find_corr(self,n_components,data,freq_set):
+    def find_corr(self,n_components,data,refer_signals):
 
         # perform canonical correlation analysis (CCA)
         # freq_set - set of sinusoidal reference templates corresponding to the flicker frequency
         cca=CCA(n_components)
         corr=np.zeros(n_components) 
-        rst=np.zeros((freq_set.shape)[0])
-        for freq_idx in range((freq_set.shape)[0]):
-            cca.fit(data.T,np.squeeze(freq_set[freq_idx,:,:]).T)
-            x_train,y_train=cca.transform(data.T,np.squeeze(freq_set[freq_idx,:,:]).T)
+        rst=np.zeros((refer_signals.shape)[0])
+        for freq_idx in range((refer_signals.shape)[0]):
+            cca.fit(data.T,np.squeeze(refer_signals[freq_idx,:,:]).T)
+            x_train,y_train=cca.transform(data.T,np.squeeze(refer_signals[freq_idx,:,:]).T)
             ind_val=0
             for ind_val in range(n_components):
                 corr[ind_val]=np.corrcoef(x_train[:,ind_val],y_train[:,ind_val])[0,1]
@@ -63,34 +60,49 @@ class CCAR(object):
 
         return rst
     
-    def process(self,data):
+    def cca_process(self,n_components,data):
 
-        freq_set=[]
-        for freq in self.freqs:
-            freq_temp=self.get_refer_signals(freq)
-            freq_set.append(freq_temp)
-        freq_set=np.array(freq_set)
-        n_components=1
-        rst=self.find_corr(n_components,data,freq_set)
+        refer_signals=self.get_refer_signals()
+        rst=self.find_corr(n_components,data,refer_signals)
         # print(rst)
         rst_max=max(rst,key=float)
         pred_class=np.argmax(rst)+1
         # print(pred_class)
 
         return pred_class
+    
+    def fbcca_process(self,data,nh=3,nfbs=5):
+        
+        return
+    
 
 
 if __name__=='__main__':
 
     
     # real-time test
-    ch_names=['POz','PO3','PO4','Oz','O1','O2']
-    sfreq=1000
-    ch_types=['eeg','eeg','eeg','eeg','eeg','eeg']
+    ch_names=['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
+    sfreq=250
+    ch_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
     info=mne.create_info(ch_names=ch_names,sfreq=sfreq,ch_types=ch_types)
 
-    data_in_mat='dataset/data.mat'
-    data=scio.loadmat(data_in_mat)['rst'][:9]
+    data_in_mat='dataset/S001-S010/S001.mat'
+    # 8 channels;710 points(0.5s->2s->0.14s->0.2s);dry/wet;10 exps;12 freqs 
+    data=scio.loadmat(data_in_mat)['data']
+    cca_pattern=IntentRec()
+    cca_pattern.sampling_rate=250
+    cca_pattern.num_sampling_points=500
+
+    for i in range(3):
+        ans=0
+        for j in range(10):
+            cur=data[:,125:625,1,j,i]
+            pred_class=cca_pattern.cca_process(1,cur)
+            if(pred_class==i+1):
+                ans+=1
+        print(str(ans*10)+"%")
+
+    '''
     idx=np.where(data[8,:]==255)
     data1=data[0:3,idx[0][0]:idx[0][1]]
     data2=data[5:8,idx[0][0]:idx[0][1]]
@@ -105,13 +117,13 @@ if __name__=='__main__':
     fs=raw.info['sfreq']
     ns=data.shape[1]
     #-----CCAR-----#
-    temp=CCAR()
+    temp=CCA()
     temp.sampling_rate=fs
     temp.num_sampling_points=ns
     
     pred_class=temp.process(data)
     print(pred_class)
-    
+    '''
 
     '''
     # offline test - wireless_data

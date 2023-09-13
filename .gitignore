@@ -1,18 +1,17 @@
+# 忽略.vscode
+.vscode/
+
 # 忽略EEG数据集
 dataset/
 
 # 忽略论文集
 paper/
 
-# 忽略.vscode
-.vscode/
-
 # 忽略build文件夹
-program/build/
+build/
 
 # 忽略.py程序运行缓存文件
-program/__pycache__/
-program/*/__pycache__/
+__pycache__/
 
 # 忽略.m程序运行缓存文件
-program/*/*.asv
+*.asv

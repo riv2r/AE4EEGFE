@@ -1,8 +1,9 @@
 import numpy as np
 from sklearn.cross_decomposition import CCA
-from DataProcess import DataProcess
+import warnings
+import scipy.signal
+from scipy.stats import pearsonr
 import mne
-import time
 import scipy.io as scio
 
 
@@ -60,21 +61,84 @@ class IntentRec(object):
 
         return rst
     
-    def cca_process(self,n_components,data):
+    def cca_process(self,n_components,data,nh=3):
 
-        refer_signals=self.get_refer_signals()
+        refer_signals=self.get_refer_signals(nh)
         rst=self.find_corr(n_components,data,refer_signals)
         # print(rst)
         rst_max=max(rst,key=float)
-        pred_class=np.argmax(rst)+1
+        pred_class=np.argmax(rst)
         # print(pred_class)
 
         return pred_class
     
-    def fbcca_process(self,data,nh=3,nfbs=5):
-        
-        return
+    def filterbank(self,data,idx_fb):
+        if idx_fb == None:
+            warnings.warn('stats:filterbank:MissingInput '\
+                        +'Missing filter index. Default value (idx_fb = 0) will be used.')
+            idx_fb = 0
+        elif (idx_fb < 0 or 20 < idx_fb):
+            raise ValueError('stats:filterbank:InvalidInput '\
+                            +'The number of sub-bands must be 0 <= idx_fb <= 9.')
+            
+        if (len(data.shape)==2):
+            num_chans = data.shape[0]
+            num_trials = 1
+        else:
+            num_chans, _, num_trials = data.shape
     
+        # Nyquist Frequency = Fs/2N
+        fs = self.sampling_rate
+        Nq = fs/2
+    
+        passband = np.arange(9,89,4)
+        stopband = np.arange(8,88,4)
+        Wp = [passband[idx_fb]/Nq, 90/Nq]
+        Ws = [stopband[idx_fb]/Nq, 100/Nq]
+        [N, Wn] = scipy.signal.cheb1ord(Wp, Ws, 3, 40) # band pass filter StopBand=[Ws(1)~Ws(2)] PassBand=[Wp(1)~Wp(2)]
+        [B, A] = scipy.signal.cheby1(N, 0.5, Wn, 'bandpass') # Wn passband edge frequency
+    
+        y = np.zeros(data.shape)
+        if (num_trials == 1):
+            for ch_i in range(num_chans):
+                #apply filter, zero phass filtering by applying a linear filter twice, once forward and once backwards.
+                # to match matlab result we need to change padding length
+                y[ch_i, :] = scipy.signal.filtfilt(B, A, data[ch_i, :], padtype = 'odd', padlen=3*(max(len(B),len(A))-1))
+        
+        else:
+            for trial_i in range(num_trials):
+                for ch_i in range(num_chans):
+                    y[ch_i, :, trial_i] = scipy.signal.filtfilt(B, A, data[ch_i, :, trial_i], padtype = 'odd', padlen=3*(max(len(B),len(A))-1))
+           
+        return y
+
+    def fbcca_process(self,n_components,data,nh=3,nfbs=5):
+        
+        fb_coefs=np.power(np.arange(1,nfbs+1),-1.25)+0.25
+
+        num_targs=len(self.freqs)
+        num_chans,num_smpls=data.shape
+        y_ref=self.get_refer_signals(nh)
+        cca=CCA(n_components)
+
+        r=np.zeros((nfbs,num_targs))
+
+        test_tmp = np.squeeze(data)  #deal with one target a time
+        for fb_i in range(nfbs):  #filter bank number, deal with different filter bank
+             testdata = self.filterbank(test_tmp, fb_i)  #data after filtering
+             for class_i in range(num_targs):
+                 refdata = np.squeeze(y_ref[class_i, :, :])   #pick corresponding freq target reference signal
+                 test_C, ref_C = cca.fit_transform(testdata.T, refdata.T)
+                 # len(row) = len(observation), len(column) = variables of each observation
+                 # number of rows should be the same, so need transpose here
+                 # output is the highest correlation linear combination of two sets
+                 r_tmp, _ = pearsonr(np.squeeze(test_C), np.squeeze(ref_C)) #return r and p_value, use np.squeeze to adapt the API 
+                 r[fb_i, class_i] = r_tmp
+                 
+        rho = np.dot(fb_coefs, r)  #weighted sum of r from all different filter banks' result
+        tau = np.argmax(rho)  #get maximum from the target as the final predict (get the index)
+        result = tau #index indicate the maximum(most possible) target
+        return result
 
 
 if __name__=='__main__':
@@ -86,7 +150,7 @@ if __name__=='__main__':
     ch_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
     info=mne.create_info(ch_names=ch_names,sfreq=sfreq,ch_types=ch_types)
 
-    data_in_mat='dataset/S001-S010/S001.mat'
+    data_in_mat='dataset/S001-S010/S005.mat'
     # 8 channels;710 points(0.5s->2s->0.14s->0.2s);dry/wet;10 exps;12 freqs 
     data=scio.loadmat(data_in_mat)['data']
     cca_pattern=IntentRec()
@@ -94,13 +158,17 @@ if __name__=='__main__':
     cca_pattern.num_sampling_points=500
 
     for i in range(3):
-        ans=0
+        ans1=0
+        ans2=0
         for j in range(10):
             cur=data[:,125:625,1,j,i]
-            pred_class=cca_pattern.cca_process(1,cur)
-            if(pred_class==i+1):
-                ans+=1
-        print(str(ans*10)+"%")
+            pred_class1=cca_pattern.cca_process(1,cur)
+            pred_class2=cca_pattern.fbcca_process(1,cur,5,20)
+            if(pred_class1==i):
+                ans1+=1
+            if(pred_class2==i):
+                ans2+=1
+        print(str(ans1*10)+'%'+' '+str(ans2*10)+'%')
 
     '''
     idx=np.where(data[8,:]==255)

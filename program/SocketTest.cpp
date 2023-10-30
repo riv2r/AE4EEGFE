@@ -8,14 +8,13 @@
 
 using namespace std;
 
-float ByteToFloat(unsigned char* p)
-{
-    return *((float*)p);
+double ByteToDouble(unsigned char* p){
+    return *((double*)p);
 }
 
 int main()
 {
-    vector<vector<float>> res(5000,vector<float>(9,0));
+    vector<vector<double>> res(5000,vector<double>(9,0));
     int row=0,col=0;
 
     SocketComm ch("127.0.0.1",8712);
@@ -23,39 +22,38 @@ int main()
 
     bool chValid=ch.open();
 
-    if(sh.write()) cout<<"mark"<<endl;
+    if(sh.write())
+        cout<<"mark"<<endl;
 
     clock_t st=clock();
     clock_t ed=clock();
-    while((double)(ed-st)/CLOCKS_PER_SEC<=4)
-    {
+    while((double)(ed-st)/CLOCKS_PER_SEC<=4){
         ed=clock();
     }
 
-    if(sh.write()) cout<<"mark"<<endl;
+    if(sh.write())
+        cout<<"mark"<<endl;
     
-	while(chValid && row<5000)
-    {
+	while(chValid && row<5000){
 		char recData[4];
 		int ret=recv(ch.getClientHandle(),recData,4,0);
-        if(ret)
-        {
+        if(ret){
             unsigned char* p=reinterpret_cast<unsigned char*>(recData);
-            res[row][col]=ByteToFloat(p);
+            res[row][col]=ByteToDouble(p);
             ++col;
-            if(col==9)
-            {
+            if(col==9){
                 col=0;
                 ++row;
             }
         }
 	}
-	WSACleanup();
+
     ofstream fWriter("file.txt");
-    for(int i=0;i<5000;++i)
-    {
-        if(res[i][8]==255) cout<<"OK "<<i<<endl;
-        for(int j=0;j<9;++j) fWriter<<res[i][j]<<" ";
+    for(int i=0;i<5000;++i){
+        if(res[i][8]==255)
+            cout<<"OK "<<i<<endl;
+        for(int j=0;j<9;++j)
+            fWriter<<res[i][j]<<" ";
         fWriter<<"\n";
     }
     fWriter.flush();

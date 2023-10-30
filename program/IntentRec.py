@@ -4,14 +4,13 @@ import warnings
 import scipy.signal
 from scipy.stats import pearsonr
 import mne
-import scipy.io as scio
 
 
 class IntentRec(object):
 
     def __init__(self):
 
-        self.freqs                  =[9.25,11.25,13.25]
+        self.freqs                  =[8,9,10,11,12,13]
         self.sampling_rate          =1000
         self.num_sampling_points    =5000
 
@@ -140,16 +139,38 @@ class IntentRec(object):
         result = tau #index indicate the maximum(most possible) target
         return result
 
+def methodCCA(data):
+    data=np.array(data).T
+    fs=250
+    ns=data.shape[1]
+    #-----CCA-----#
+    method=IntentRec()
+    method.sampling_rate=fs
+    method.num_sampling_points=ns
+    
+    pred_class=method.cca_process(1,data,3)
+    return pred_class
+
 
 if __name__=='__main__':
-
-    
     # real-time test
     ch_names=['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
     sfreq=250
     ch_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
     info=mne.create_info(ch_names=ch_names,sfreq=sfreq,ch_types=ch_types)
+    '''
+    data=getdata(data)
 
+    fs=sfreq
+    ns=data.shape[1]
+    #-----CCA-----#
+    temp=IntentRec()
+    temp.sampling_rate=fs
+    temp.num_sampling_points=ns
+    
+    pred_class=temp.cca_process(1,data,3)
+    '''
+    '''
     data_in_mat='dataset/S001-S010/S005.mat'
     # 8 channels;710 points(0.5s->2s->0.14s->0.2s);dry/wet;10 exps;12 freqs 
     data=scio.loadmat(data_in_mat)['data']
@@ -169,7 +190,7 @@ if __name__=='__main__':
             if(pred_class2==i):
                 ans2+=1
         print(str(ans1*10)+'%'+' '+str(ans2*10)+'%')
-
+    '''
     '''
     idx=np.where(data[8,:]==255)
     data1=data[0:3,idx[0][0]:idx[0][1]]

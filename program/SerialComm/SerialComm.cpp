@@ -1,34 +1,14 @@
 #include "SerialComm.h"
 
-SerialComm::SerialComm()
-{
-    open();
+SerialComm::SerialComm(){
     init();
 }
 
-SerialComm::~SerialComm()
-{
+SerialComm::~SerialComm(){
     close();
 }
 
-void SerialComm::open()
-{
-    this->serialHandle=CreateFileA(this->port,
-                                   GENERIC_WRITE,
-                                   0,
-                                   NULL,
-                                   OPEN_EXISTING,
-                                   0,
-                                   NULL);
-    if(this->serialHandle==INVALID_HANDLE_VALUE)
-    {
-        std::cout<<"serial open error"<<std::endl;
-        return;
-    }
-}
-
-void SerialComm::init()
-{
+void SerialComm::init(){
     SetupComm(this->serialHandle,1024,1024);
     
     COMMTIMEOUTS tout;
@@ -46,14 +26,27 @@ void SerialComm::init()
     PurgeComm(this->serialHandle,PURGE_TXCLEAR|PURGE_RXCLEAR);
 }
 
-bool SerialComm::write()
-{
+void SerialComm::open(){
+    this->serialHandle=CreateFileA(this->port,
+                                   GENERIC_WRITE,
+                                   0,
+                                   NULL,
+                                   OPEN_EXISTING,
+                                   0,
+                                   NULL);
+    if(this->serialHandle==INVALID_HANDLE_VALUE){
+        std::cout<<"serial open error"<<std::endl;
+        return;
+    }
+}
+
+bool SerialComm::write(){
     DWORD num;
-    if(WriteFile(this->serialHandle,mark,sizeof(mark),&num,0)) return true;
+    if(WriteFile(this->serialHandle,mark,sizeof(mark),&num,0))
+        return true;
     return false;
 }
 
-void SerialComm::close()
-{
+void SerialComm::close(){
     CloseHandle(this->serialHandle);
 }

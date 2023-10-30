@@ -4,18 +4,15 @@
 #include <windows.h>
 #include <iostream>
 
-class SerialComm
-{
+class SerialComm{
 public:
     SerialComm();
     ~SerialComm();
-    SerialComm(const char* p):port(p)
-    {
-        open();
+    SerialComm(const char* p):port(p){
         init();
     }
-    void open();
     void init();
+    void open();
     bool write();
     void close();
 private:

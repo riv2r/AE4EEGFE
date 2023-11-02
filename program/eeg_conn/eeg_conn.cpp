@@ -1,6 +1,6 @@
 #include "eeg_conn.h"
 
-extern vector<vector<double>> glbdata;
+extern vector<vector<float>> glbdata;
 
 vector<int> eeg_conn::results=vector<int>();
 
@@ -48,7 +48,7 @@ void eeg_conn::recognize(){
     for(int i=0;i<data.size();i++){
 		PyObject *PyListTemp=PyList_New((Py_ssize_t)data[i].size());
 		for(int j=0;j<data[i].size();j++){
-			PyList_SetItem(PyListTemp,j,PyFloat_FromDouble(data[i][j]));
+			PyList_SetItem(PyListTemp,j,PyFloat_FromDouble((double)data[i][j]));
 		}
 		PyList_Append(PyList,PyListTemp);
 	}
@@ -75,8 +75,12 @@ bool eeg_conn::write(){
 
 void eeg_conn::process(){
 	bool rflag=read();
-	if(rflag)
+	if(rflag){
 		recognize();
+	}
+	else{
+		cout<<"read fault"<<endl;
+	}
     if(result!=-1){
         write();
     }

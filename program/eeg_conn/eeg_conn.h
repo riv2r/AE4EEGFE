@@ -34,7 +34,7 @@ private:
     int e_n;
     int e_chs;
     int result=-1;
-    vector<vector<double>> data;
+    vector<vector<float>> data;
 };
 
 #endif

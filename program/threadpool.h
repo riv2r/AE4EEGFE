@@ -37,6 +37,7 @@ threadpool<T>::threadpool(int thread_number,int max_requests):b_thread_number(th
 
     for(int i=0;i<b_thread_number;++i){
         b_threads.emplace_back(worker,this);
+        b_threads.back().detach();
     }
 }
 
@@ -47,7 +48,8 @@ threadpool<T>::~threadpool(){
 
     b_queuestate.notify_all();
     for(auto& t:b_threads){
-        t.join();
+        if(t.joinable())
+            t.join();
     }
 }
 

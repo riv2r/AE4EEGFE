@@ -1,13 +1,13 @@
 #include <iostream>
-#include <cmath>
 #include <vector>
+#include <cmath>
 #include <csignal>
 #include <cassert>
 
-// #include <winsock2.h> before #include <windows.h>
+#include "threadpool.h"
+//#include <winsock2.h> before #include <windows.h>
 #include "SocketComm/SocketComm.h"
 #include "SerialComm/SerialComm.h"
-#include "threadpool.h"
 #include "eeg_conn/eeg_conn.h"
 
 using namespace std;
@@ -19,15 +19,19 @@ int port=8712;
 
 int n=1000;
 int chs=8;
-vector<vector<double>> glbdata(n,vector<double>(chs));
+vector<vector<float>> glbdata(n,vector<float>(chs));
 
 static bool stop=false;
 static void handle_term(int sig){
 	stop=true;
 }
 
-double Byte2Double(unsigned char* p){
-    return *((double*)p);
+float Byte2Float(unsigned char* p){
+    float ans=0;
+	unsigned long long temp=0;
+	temp=(*p<<0)+(*(p+1)<<8)+(*(p+2)<<16)+(*(p+3)<<24);
+	ans=*(float*)&temp;
+	return ans;
 }
 
 int main(){
@@ -47,12 +51,12 @@ int main(){
 	bool chValid=ch.open();
 	int row=0,col=0;
 	int idx=0;
-	while(chValid){
+	while(chValid && !stop){
 		char recData[4];
 		int ret=recv(ch.getClientHandle(),recData,4,0);
 		if(ret){
 			unsigned char* p=reinterpret_cast<unsigned char*>(recData);
-			glbdata[row][col]=Byte2Double(p);
+			glbdata[row][col]=Byte2Float(p);
 			++col;
 			if(col==chs){
 				col=0;

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <thread>
 #include <csignal>
 #include <cassert>
 
@@ -31,8 +30,6 @@ double Byte2Double(unsigned char* p){
     return *((double*)p);
 }
 
-void IntentRecPy(vector<vector<double>>& nums);
-
 int main(){
 	Py_Initialize();
 	//python 3.9 and later does nothing
@@ -61,7 +58,7 @@ int main(){
 				col=0;
 				++row;
 				if(row==n){
-					items[idx].init(ch.getClientHandle(),n,chs);
+					items[idx].init(n,chs);
 					pool.append(items+idx);
 					++idx;
 					row=0;
@@ -78,60 +75,3 @@ int main(){
 
 	return 0;
 }
-
-/*
-void IntentRecPy(){
-	PythonThreadLocker locker;
-	
-    Py_Initialize();
-
-    if(!Py_IsInitialized()){
-		std::cout<<".py initialize failed"<<std::endl;
-		return;
-	}
-	
-    PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.path.append('C:/Users/user/Desktop/ControlByBCI/program')");
-
-	PyObject* pModule=PyImport_ImportModule("IntentRec");
-
-	if(pModule==NULL){
-		std::cout<<"module not found"<<std::endl;
-		return;
-	}
-
-	PyObject* pFunc=PyObject_GetAttrString(pModule,"methodCCA");
-
-	if(!pFunc || !PyCallable_Check(pFunc)){
-		std::cout<<"methodCCA() not found"<<std::endl;
-		return;
-	}
-	
-	vector<vector<double>> nums(glbData);
-
-	PyObject *PyList=PyList_New(0);
-    PyObject *ArgList=PyTuple_New(1);
-    for(int i=0;i<nums.size();i++){
-		PyObject *PyListTemp=PyList_New((Py_ssize_t)nums[i].size());
-		for(int j=0;j<nums[i].size();j++){
-			PyList_SetItem(PyListTemp,j,PyFloat_FromDouble(nums[i][j]));
-		}
-		PyList_Append(PyList,PyListTemp);
-	}
-	PyTuple_SetItem(ArgList,0,PyList);
-
-	PyObject* pRet=PyObject_CallObject(pFunc,ArgList);
-
-	int result;
-	PyArg_Parse(pRet,"i",&result);
-	cout<<"result:"<<result<<endl;
-
-	Py_DECREF(pRet);
-	Py_DECREF(pFunc);
-	Py_DECREF(pModule);
-
-    Py_Finalize();
-
-	return;
-}
-*/

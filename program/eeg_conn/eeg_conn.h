@@ -14,20 +14,25 @@ public:
     eeg_conn(){};
     ~eeg_conn(){};
 public:
-    void init(SOCKET,int,int);
+    void init(int,int);
     void process();
     bool read();
     void recognize();
     bool write();
+    int getn(){
+        return this->e_n;
+    }
+    int getchs(){
+        return this->e_chs;
+    }
     int getrst(){
         return this->result;
     }
 public:
     static vector<int> results;
 private:
-    SOCKET sockfd;
-    int n;
-    int chs;
+    int e_n;
+    int e_chs;
     int result=-1;
     vector<vector<double>> data;
 };

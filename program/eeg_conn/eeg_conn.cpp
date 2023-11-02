@@ -4,15 +4,14 @@ extern vector<vector<double>> glbdata;
 
 vector<int> eeg_conn::results=vector<int>();
 
-void eeg_conn::init(SOCKET fd,int n,int chs){
-    sockfd=fd;
-    n=n;
-    chs=chs;
+void eeg_conn::init(int n,int chs){
+    e_n=n;
+    e_chs=chs;
 }
 
 bool eeg_conn::read(){
 	data=glbdata;
-	if(data.size()==n && data[0].size()==chs)
+	if(data.size()==e_n && data[0].size()==e_chs)
 		return true;
 	return false;
 }
@@ -58,12 +57,13 @@ void eeg_conn::recognize(){
 	PyObject* pRet=PyObject_CallObject(pFunc,ArgList);
 
 	PyArg_Parse(pRet,"i",&result);
+	cout<<result<<endl;
 
 	Py_DECREF(pRet);
 	Py_DECREF(pFunc);
 	Py_DECREF(pModule);
 
-    Py_Finalize();
+    //Py_Finalize();
 
 	return;
 }

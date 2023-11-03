@@ -1,5 +1,39 @@
 # Control Scheme Based On Brain-Computer Interface Technology
 
+## 0 目录结构
+```bash
+ControlByBCI
+|---.vscode     # 配置文件
+|
+|---dataset     # 数据集
+|
+|---paper       # 论文集
+|
+|---rst         # 结果
+|
+|---program     # 程序
+|   |---script.ps1  # 调度脚本
+|   |   |---FlickerStimulator.py    # SSVEP 刺激范式
+|   |   |---Live.py                 # 实时视频
+|   |   |---IntentRec.py            # 算法
+|   |   |---main.cpp                # 主程序
+|   |   |---threadpool.h            # 线程池
+|   |   |---PythonThreadLocker.h    # Python GIL 锁
+|   |   |---SocketComm  # Socket通信类
+|   |   |   |---SocketComm.h
+|   |   |   |---SocketComm.cpp
+|   |   |---SerialComm  # 串口通信类
+|   |   |   |---SerialComm.h
+|   |   |   |---SerialComm.cpp
+|   |   |---eeg_conn    # 脑电信号类
+|   |   |   |---eeg_conn.h
+|   |   |   |---eeg_conn.cpp
+|
+|---.gitignore
+|
+|---README.md
+```
+
 ## 1 [脑电波](https://baike.baidu.com/item/%E8%84%91%E7%94%B5%E6%B3%A2/1599805?fr=aladdin)
 
 |名称|频率(Hz)|振幅($\mu$V)|活动|
@@ -97,7 +131,6 @@ EEG中的非平稳波形变为了平稳波形
 ![raw_6](https://github.com/riv2r/ControlByBCI/blob/master/rst/raw_6.png)
 ![epochs_6](https://github.com/riv2r/ControlByBCI/blob/master/rst/epochs_6.png)
 
-
 ## 6 特征提取和分类
 
 ### 6.1 目的
@@ -147,10 +180,6 @@ CCA算法仍存在以下问题：
 2. CCA主要用于线性信号的处理，而EEG为非线性信号。在CCA的相关实验中，假设EEG为刺激频率的线性输出，但实际混杂了部分环境噪声及伪迹；
 3. CCA在2s以上的长时间片中的表现极为优秀，但因为其未考虑EEG非线性的特性，在1s以内短时间片处理时仍存在不足之处。
 
-### 6.3 深度典型相关分析(Deep CCA)
-
-### 6.4 深度典型相关自编码器(Deep Canonical Correlated Autoencoders)
-
 ## A 论文及相关技术调研
 
 1. [运动想象系统中的特征提取算法和分类算法](https://blog.51cto.com/u_6811786/3791770)
@@ -160,7 +189,7 @@ CCA算法仍存在以下问题：
 - **空域方法**：运动想象领域比较通用的特征提取方法，主要通过设计空域滤波器对EEG的多通道空间分布进行处理，提取特征；共空间模式法(Common Spatial Pattern, CSP)、基于CSP的改进方法；时域分析开销较大，需要与较多脑电导联，应用较复杂
 - 小波变换：噪声与信号频率接近时，信号失真严重
 
-2. [基于稳态视觉诱发电位的脑电控制上肢康复机器人](paper/SSVEP-based BCIs/基于稳态视觉诱发电位的脑电控制上肢康复机器人_熊特.pdf)
+2. [基于稳态视觉诱发电位的脑电控制上肢康复机器人](paper\基于稳态视觉诱发电位的脑电控制上肢康复机器人_熊特.pdf)
 
 3种主流的刺激显示装置：LED、CRT、LCD
 
@@ -183,8 +212,7 @@ graph TD
     end
 ```
 
-3. [上肢康复训练机器人的脑机接口系统研究](paper/SSVEP-based BCIs/上肢康复训练机器人的脑机接口系统研究_翟文文.pdf)
-
+3. [上肢康复训练机器人的脑机接口系统研究](paper\上肢康复训练机器人的脑机接口系统研究_翟文文.pdf)
 
 控制流程：
 ```mermaid
@@ -205,12 +233,10 @@ graph TD
 
 脑电信号采集模块：博睿康科技有限公司32导无线脑电采集系统，包括32通道电极帽、放大器以及无线路由器，采样频率设置为250Hz，记录电极为P3、P4、PO3、PO4、O1、O2、PZ、OZ、T5、T6，电极阻抗在5k$\Omega$以下
 
-
-
 ## B EEG信号数据
 
 上海交通大学BCMI实验室数据集
 
 [脑电(EEG)等公开数据集汇总](https://zhuanlan.zhihu.com/p/138286382)
 
-[EEG 公开数据集整理](https://zhuanlan.zhihu.com/p/377480885)
+[EEG公开数据集整理](https://zhuanlan.zhihu.com/p/377480885)

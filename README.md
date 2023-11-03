@@ -15,6 +15,7 @@ ControlByBCI
 |   |---script.ps1  # 调度脚本
 |   |   |---FlickerStimulator.py    # SSVEP 刺激范式
 |   |   |---Live.py                 # 实时视频
+|   |   |---DataProcess.py          # 数据处理
 |   |   |---IntentRec.py            # 算法
 |   |   |---main.cpp                # 主程序
 |   |   |---threadpool.h            # 线程池

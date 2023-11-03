@@ -1,9 +1,12 @@
-import numpy as np
-from sklearn.cross_decomposition import CCA
-import warnings
-import scipy.signal
-from scipy.stats import pearsonr
 import mne
+import warnings
+import numpy as np
+import scipy.signal
+import scipy.io as scio
+from scipy.stats import pearsonr
+from sklearn.cross_decomposition import CCA
+
+from DataProcess import DataProcess
 
 
 class IntentRec(object):
@@ -153,45 +156,15 @@ def methodCCA(data):
 
 
 if __name__=='__main__':
-    # real-time test
+    '''
+    # Real-Time EXPT. based on MATLAB
     ch_names=['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
     sfreq=250
     ch_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
     info=mne.create_info(ch_names=ch_names,sfreq=sfreq,ch_types=ch_types)
-    '''
-    data=getdata(data)
 
-    fs=sfreq
-    ns=data.shape[1]
-    #-----CCA-----#
-    temp=IntentRec()
-    temp.sampling_rate=fs
-    temp.num_sampling_points=ns
-    
-    pred_class=temp.cca_process(1,data,3)
-    '''
-    '''
-    data_in_mat='dataset/S001-S010/S005.mat'
-    # 8 channels;710 points(0.5s->2s->0.14s->0.2s);dry/wet;10 exps;12 freqs 
-    data=scio.loadmat(data_in_mat)['data']
-    cca_pattern=IntentRec()
-    cca_pattern.sampling_rate=250
-    cca_pattern.num_sampling_points=500
-
-    for i in range(3):
-        ans1=0
-        ans2=0
-        for j in range(10):
-            cur=data[:,125:625,1,j,i]
-            pred_class1=cca_pattern.cca_process(1,cur)
-            pred_class2=cca_pattern.fbcca_process(1,cur,5,20)
-            if(pred_class1==i):
-                ans1+=1
-            if(pred_class2==i):
-                ans2+=1
-        print(str(ans1*10)+'%'+' '+str(ans2*10)+'%')
-    '''
-    '''
+    data_in_mat='dataset/data.mat'
+    data=scio.loadmat(data_in_mat)['rst']
     idx=np.where(data[8,:]==255)
     data1=data[0:3,idx[0][0]:idx[0][1]]
     data2=data[5:8,idx[0][0]:idx[0][1]]
@@ -205,21 +178,48 @@ if __name__=='__main__':
     data=raw.get_data()
     fs=raw.info['sfreq']
     ns=data.shape[1]
-    #-----CCAR-----#
-    temp=CCA()
-    temp.sampling_rate=fs
-    temp.num_sampling_points=ns
     
-    pred_class=temp.process(data)
+    ir=IntentRec()
+    ir.freqs=[7.5,8.57,10,12]
+    ir.sampling_rate=fs
+    ir.num_sampling_points=ns
+    
+    pred_class=ir.cca_process(1,data,3)
     print(pred_class)
     '''
 
+
     '''
-    # offline test - wireless_data
+    # Offline EXPT. based on Tsinghua data
+    data_in_mat='dataset/S001-S010/S005.mat'
+    # 8 channels;710 points(0.5s->2s->0.14s->0.2s);dry/wet;10 exps;12 freqs 
+    data=scio.loadmat(data_in_mat)['data']
+    ir=IntentRec()
+    ir.freqs=[9.25,11.25,13.25]
+    ir.sampling_rate=250
+    ir.num_sampling_points=500
+
+    for i in range(3):
+        ans1=0
+        ans2=0
+        for j in range(10):
+            cur=data[:,125:625,1,j,i]
+            pred_class1=ir.cca_process(1,cur,3)
+            pred_class2=ir.fbcca_process(1,cur,5,20)
+            if(pred_class1==i):
+                ans1+=1
+            if(pred_class2==i):
+                ans2+=1
+        print(str(ans1*10)+'%'+' '+str(ans2*10)+'%')
+    '''
+
+
+    '''
+    # Offline EXPT. based on wireless devices
     path='dataset/wireless_data/2022/10/221029-1/data.bdf'
     raw=mne.io.read_raw_bdf(path)
 
-    picks=['POz','Oz','PO3','PO4','O1','O2']
+    picks=['POz','PO3','PO4','Oz','O1','O2']
     raw.pick_channels(picks)
     
     trigger_time=[12.131, 16.146,
@@ -287,37 +287,37 @@ if __name__=='__main__':
     
     
     rst=[]
+    
+    ir=IntentRec()
+    ir.freqs=[7.5,8.57,10,12]
+
     for i in range(20):
         raw_temp=raw.copy().crop(trigger_time[2*i],trigger_time[2*i+1])
 
-        dataset=DataProcess()    
-
+        dataset=DataProcess()
         raw_temp=dataset.preprocessing(raw_temp)
 
         data=raw_temp.get_data()
         fs=raw_temp.info['sfreq']
         ns=data.shape[1]
 
-        #-----CCAR-----#
-        temp=CCAR()
-        temp.sampling_rate=fs
-        temp.num_sampling_points=ns
-        
-        pred_class=temp.process(data)
+        ir.sampling_rate=fs
+        ir.num_sampling_points=ns
+
+        pred_class=ir.cca_process(1,data,3)
         rst.append(pred_class)
 
     print(rst)
     '''
 
+    
     '''
-    # offline test - wired_data
-    start=time.time()
+    # Offline EXPT. based on wired devices
     path='dataset/wired_data/exp_1_data/1-1.vhdr'
     raw_origin=mne.io.read_raw_brainvision(path)
-    picks=['IO','POz','Oz','PO3','PO4','O1','O2']
+    picks=['IO','POz','PO3','PO4','Oz','O1','O2']
     raw_origin.pick_channels(picks)
 
-    # by observation
     # exp_1_data: 12 9.5 9
     # exp_2_data: 10 12 14
     #             11 11 9
@@ -329,7 +329,6 @@ if __name__=='__main__':
     raw=raw_origin.crop(st_time,ed_time)
 
     dataset=DataProcess()
-
     raw=dataset.preprocessing(raw)
     raw=dataset.repair_EOG_by_ICA(raw)
     data,t,num_groups,num_chans,num_sampling_points,sampling_rate=dataset.get_epochs(raw)
@@ -340,20 +339,20 @@ if __name__=='__main__':
 
     score=0
     
+    ir=IntentRec()
+    ir.freqs=list_freqs
+    ir.sampling_rate=fs
+    ir.num_sampling_points=ns
+
     for i in range(num_groups):
         data_temp=data[i]
-        #-----CCAR-----#
-        temp=CCAR()
-        temp.freqs=list_freqs
-        temp.sampling_rate=fs
-        temp.num_sampling_points=ns
         
-        pred_class=temp.process(data_temp)
+        pred_class=ir.cca_process(1,data_temp,3)
+        print(pred_class)
 
-        if pred_class == np.mod(i,5)+1:
+        if pred_class == np.mod(i,5):
             score=score+1
+
     rate=float(score)/float(num_groups)*100.0
     print('识别率:',rate,'%')
-    end=time.time()
-    print('程序执行时间为:',end-start,'s')
     '''

@@ -8,8 +8,12 @@
 
 using namespace std;
 
-double ByteToDouble(unsigned char* p){
-    return *((double*)p);
+float Byte2Float(unsigned char* p){
+    float ans=0;
+	unsigned long long temp=0;
+	temp=(*p<<0)+(*(p+1)<<8)+(*(p+2)<<16)+(*(p+3)<<24);
+	ans=*(float*)&temp;
+	return ans;
 }
 
 int main()
@@ -18,7 +22,7 @@ int main()
     int row=0,col=0;
 
     SocketComm ch("127.0.0.1",8712);
-    SerialComm sh("COM5");
+    SerialComm sh("COM7");
 
     bool chValid=ch.open();
 
@@ -39,7 +43,7 @@ int main()
 		int ret=recv(ch.getClientHandle(),recData,4,0);
         if(ret){
             unsigned char* p=reinterpret_cast<unsigned char*>(recData);
-            res[row][col]=ByteToDouble(p);
+            res[row][col]=Byte2Float(p);
             ++col;
             if(col==9){
                 col=0;

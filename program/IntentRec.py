@@ -67,10 +67,10 @@ class IntentRec(object):
 
         refer_signals=self.get_refer_signals(nh)
         rst=self.find_corr(n_components,data,refer_signals)
-        # print(rst)
+        print(rst)
         rst_max=max(rst,key=float)
         pred_class=np.argmax(rst)
-        # print(pred_class)
+        print(pred_class)
 
         return pred_class
     
@@ -144,6 +144,18 @@ class IntentRec(object):
 
 def methodCCA(data):
     data=np.array(data).T
+    
+    ch_names=['POz','PO3','PO4','PO5','PO6','Oz','O1','O2']
+    sfreq=250
+    ch_types=['eeg','eeg','eeg','eeg','eeg','eeg','eeg','eeg']
+    info=mne.create_info(ch_names=ch_names,sfreq=sfreq,ch_types=ch_types)
+
+    raw=mne.io.RawArray(data,info)
+
+    dataset=DataProcess()
+    raw=dataset.preprocessing(raw)
+
+    data=raw.get_data()
     fs=250
     ns=data.shape[1]
     #-----CCA-----#

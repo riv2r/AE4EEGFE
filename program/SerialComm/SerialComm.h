@@ -9,6 +9,7 @@ public:
     SerialComm();
     ~SerialComm();
     SerialComm(const char* p):port(p){
+        open();
         init();
     }
     void init();

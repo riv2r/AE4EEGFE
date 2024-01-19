@@ -1,22 +1,9 @@
-#include "eeg_conn.h"
+#include "DataAnalyzer.h"
 
-extern vector<vector<float>> glbdata;
+extern vector<vector<float>> globalData;
+extern queue<int> globalResult;
 
-queue<int> eeg_conn::results=queue<int>();
-
-void eeg_conn::init(int n,int chs){
-    e_n=n;
-    e_chs=chs;
-}
-
-bool eeg_conn::read(){
-	data=glbdata;
-	if(data.size()==e_n && data[0].size()==e_chs)
-		return true;
-	return false;
-}
-
-void eeg_conn::recognize(){
+void DataAnalyzer::recognize(){
 	PythonThreadLocker locker;
 	
     Py_Initialize();
@@ -45,10 +32,10 @@ void eeg_conn::recognize(){
 
 	PyObject *PyList=PyList_New(0);
     PyObject *ArgList=PyTuple_New(1);
-    for(int i=0;i<data.size();i++){
-		PyObject *PyListTemp=PyList_New((Py_ssize_t)data[i].size());
-		for(int j=0;j<data[i].size();j++){
-			PyList_SetItem(PyListTemp,j,PyFloat_FromDouble((double)data[i][j]));
+    for(int i=0;i<globalData.size();i++){
+		PyObject *PyListTemp=PyList_New((Py_ssize_t)globalData[i].size());
+		for(int j=0;j<globalData[i].size();j++){
+			PyList_SetItem(PyListTemp,j,PyFloat_FromDouble((double)globalData[i][j]));
 		}
 		PyList_Append(PyList,PyListTemp);
 	}
@@ -56,8 +43,8 @@ void eeg_conn::recognize(){
 
 	PyObject* pRet=PyObject_CallObject(pFunc,ArgList);
 
-	PyArg_Parse(pRet,"i",&result);
-	cout<<result<<endl;
+	PyArg_Parse(pRet,"i",&this->DA_result);
+	globalResult.emplace(this->DA_result);
 
 	Py_DECREF(pRet);
 	Py_DECREF(pFunc);
@@ -68,20 +55,6 @@ void eeg_conn::recognize(){
 	return;
 }
 
-bool eeg_conn::write(){
-    results.emplace(this->result);
-    return true;
-}
-
-void eeg_conn::process(){
-	bool rflag=read();
-	if(rflag){
-		recognize();
-	}
-	else{
-		cout<<"read fault"<<endl;
-	}
-    if(result!=-1){
-        write();
-    }
+void DataAnalyzer::process(){
+	recognize();
 }

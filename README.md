@@ -21,11 +21,10 @@ ControlByBCI
 |   |   |---threadpool.h            # 线程池
 |   |   |---PythonThreadLocker.h    # Python GIL 锁
 |   |   |---SocketComm  # Socket通信类
-|   |   |   |---SocketComm.h
-|   |   |   |---SocketComm.cpp
-|   |   |---SerialComm  # 串口通信类
-|   |   |   |---SerialComm.h
-|   |   |   |---SerialComm.cpp
+|   |   |   |---TCPClient.h
+|   |   |   |---TCPClient.cpp
+|   |   |   |---TCPServer.h
+|   |   |   |---TCPServer.cpp
 |   |   |---eeg_conn    # 脑电信号类
 |   |   |   |---eeg_conn.h
 |   |   |   |---eeg_conn.cpp

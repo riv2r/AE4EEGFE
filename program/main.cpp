@@ -5,7 +5,6 @@
 #include <cassert>
 
 #include "threadpool.h"
-//#include <winsock2.h> before #include <windows.h>
 #include "SocketComm/TCPClient.h"
 #include "SocketComm/TCPServer.h"
 #include "eeg_conn/eeg_conn.h"

@@ -164,7 +164,7 @@ def methodCCA(data):
     method.num_sampling_points=ns
     
     pred_class=method.cca_process(1,data,3)
-    return pred_class
+    return pred_class+1
 
 
 if __name__=='__main__':

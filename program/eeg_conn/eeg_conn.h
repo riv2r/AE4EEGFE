@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <winsock2.h>
 
 #include "../PythonThreadLocker.h"
@@ -29,7 +30,7 @@ public:
         return this->result;
     }
 public:
-    static vector<int> results;
+    static queue<int> results;
 private:
     int e_n;
     int e_chs;

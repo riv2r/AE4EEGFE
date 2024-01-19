@@ -2,7 +2,7 @@
 
 extern vector<vector<float>> glbdata;
 
-vector<int> eeg_conn::results=vector<int>();
+queue<int> eeg_conn::results=queue<int>();
 
 void eeg_conn::init(int n,int chs){
     e_n=n;
@@ -69,7 +69,7 @@ void eeg_conn::recognize(){
 }
 
 bool eeg_conn::write(){
-    results.emplace_back(this->result);
+    results.emplace(this->result);
     return true;
 }
 

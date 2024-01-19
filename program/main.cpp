@@ -6,32 +6,28 @@
 
 #include "threadpool.h"
 //#include <winsock2.h> before #include <windows.h>
-#include "SocketComm/SocketComm.h"
-#include "SerialComm/SerialComm.h"
+#include "SocketComm/TCPClient.h"
+#include "SocketComm/TCPServer.h"
 #include "eeg_conn/eeg_conn.h"
 
+// namespace
 using namespace std;
 
+// macro define
 #define PI acos(-1)
 
-const char* ip="127.0.0.1";
-int port=8712;
-
-int n=1000;
+// global variables
+const char* serverIP1="127.0.0.1";
+int serverPort1=8712;
+const char* serverIP2="192.168.185.192";
+int serverPort2=8080;
+int n=4000;
 int chs=8;
 vector<vector<float>> glbdata(n,vector<float>(chs));
 
 static bool stop=false;
 static void handle_term(int sig){
 	stop=true;
-}
-
-float Byte2Float(unsigned char* p){
-    float ans=0;
-	unsigned long long temp=0;
-	temp=(*p<<0)+(*(p+1)<<8)+(*(p+2)<<16)+(*(p+3)<<24);
-	ans=*(float*)&temp;
-	return ans;
 }
 
 int main(){
@@ -47,16 +43,17 @@ int main(){
 
 	threadpool<eeg_conn> pool;
 	
-	SocketComm ch(ip,port);
-	bool chValid=ch.open();
+	TCPClient client;
+	bool flag1=client.connect2Server(serverIP1,serverPort1);
+	TCPServer server;
+	bool flag2=server.setupServer(serverIP2,serverPort2);
 	int row=0,col=0;
 	int idx=0;
-	while(chValid && !stop){
+	while(flag1 && flag2 && !stop){
 		char recData[4];
-		int ret=recv(ch.getClientHandle(),recData,4,0);
-		if(ret){
-			unsigned char* p=reinterpret_cast<unsigned char*>(recData);
-			glbdata[row][col]=Byte2Float(p);
+		bool flag_r=client.receiveData(recData,4);
+		if(flag_r){
+			glbdata[row][col]=*reinterpret_cast<float*>(recData);
 			++col;
 			if(col==chs){
 				col=0;
@@ -69,6 +66,11 @@ int main(){
 					col=0;
 				}
 			}
+		}
+		if(!eeg_conn::results.empty()){
+			const char* result=to_string(eeg_conn::results.front()).c_str();
+			server.sendData(result,strlen(result));
+			eeg_conn::results.pop();
 		}
 	}
 	delete[] items;

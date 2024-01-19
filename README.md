@@ -25,9 +25,9 @@ ControlByBCI
 |   |   |   |---TCPClient.cpp
 |   |   |   |---TCPServer.h
 |   |   |   |---TCPServer.cpp
-|   |   |---eeg_conn    # 脑电信号类
-|   |   |   |---eeg_conn.h
-|   |   |   |---eeg_conn.cpp
+|   |   |---NewArch     # 新型控制架构类
+|   |   |   |---DataAnalyzer.h
+|   |   |   |---DataAnalyzer.cpp
 |
 |---.gitignore
 |

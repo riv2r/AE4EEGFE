@@ -23,7 +23,7 @@ const char* serverIP1="127.0.0.1";
 int serverPort1=8712;
 const char* serverIP2="192.168.185.192";
 int serverPort2=8080;
-int n=3000;
+int n=1500;
 int chs=8;
 vector<vector<float>> globalData(n,vector<float>(chs));
 queue<int> globalResult;
@@ -76,11 +76,19 @@ int main(){
 				}
 			}
 		}
-		if(!globalResult.empty()){
-			const char* val=to_string(globalResult.front()).c_str();
-			server.sendData(val,strlen(val));
+		if(!globalResult.empty() && globalResult.size()>=2){
+			int fst=globalResult.front();
 			globalResult.pop();
-			cout<<cnt<<endl;
+			if(fst==0){
+				cout<<"invalid result"<<endl;
+				continue;
+			}
+			int snd=globalResult.front();
+			if(fst==snd){
+				const char* val=to_string(globalResult.front()).c_str();
+				server.sendData(val,strlen(val));
+				cout<<cnt<<endl;
+			}
 		}
 	}
 	delete[] DAItems;

@@ -69,6 +69,8 @@ class IntentRec(object):
         rst=self.find_corr(n_components,data,refer_signals)
         print(rst)
         rst_max=max(rst,key=float)
+        if rst_max<0.2:
+            return -1
         pred_class=np.argmax(rst)
         print(pred_class)
 
